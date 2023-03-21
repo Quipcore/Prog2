@@ -1,4 +1,4 @@
-package com.example.prog2;
+package com.main;
 
 import java.util.List;
 import java.util.NoSuchElementException;

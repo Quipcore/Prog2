@@ -1,4 +1,4 @@
-package com.example.prog2;
+package com.main;
 
 public class Node {
     int xPos;
