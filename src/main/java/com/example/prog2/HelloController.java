@@ -22,5 +22,6 @@ public class HelloController {
         String text = !clicked ? "Yay" : "Noooo";
         textBox.setText(text);
         clicked = !clicked;
+        //textBox.setTranslateX(100); //<-- setTranslate to change pos
     }
 }
