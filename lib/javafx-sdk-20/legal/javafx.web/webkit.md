@@ -1,6 +1,7 @@
 ## WebKit Open Source Project: WebKit v614.1
 
 ### WebKit Notice
+
 ```
 
 You are receiving a copy of WebKit in either source or
@@ -27,6 +28,7 @@ code is here:
 ```
 
 ### LICENSE
+
 ```
 There are multiple licenses that apply to different parts of WebKit. The
 overarching license is LGPL 2.1, however parts are covered by MPL 2,
@@ -34,6 +36,7 @@ Apache 2.0, and BSD-style licenses.
 ```
 
 #### LGPL 2.1 License
+
 ```
 
 Copyright (C) 1999-2004 Harri Porten (porten@kde.org)
@@ -714,6 +717,7 @@ That's all there is to it!
 ```
 
 #### MPL 2 License
+
 ```
 
 ---------------------------------
@@ -1102,6 +1106,7 @@ Exhibit B - "Incompatible With Secondary Licenses" Notice
 ```
 
 #### Apache 2.0 License
+
 ```
 
 ---------------------------------
@@ -1316,6 +1321,7 @@ limitations under the License.
 ```
 
 #### MIT License
+
 ```
 
 ---------------------------------
@@ -1500,6 +1506,7 @@ SOFTWARE.
 ```
 
 #### Sun Microsystems License
+
 ```
 ---------------------------------
 The below license applies to the following files:
@@ -1515,6 +1522,7 @@ is preserved.
 ```
 
 #### BSD 2-clause License
+
 ```
 
 ---------------------------------
@@ -5239,6 +5247,7 @@ DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 ```
 
 #### BSD 3-clause License
+
 ```
 
 ---------------------------------

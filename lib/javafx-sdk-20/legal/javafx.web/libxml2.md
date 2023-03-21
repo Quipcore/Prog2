@@ -1,6 +1,7 @@
 ## xmlsoft.org: libxml2 v2.9.14
 
 ### libxml2 License
+
 ```
 
 Except where otherwise noted in the source code (e.g. the files hash.c,

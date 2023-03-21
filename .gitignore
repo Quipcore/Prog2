@@ -1,5 +1,45 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
+
+### Others ###
 .metadata
-bin/
+#bin/
 tmp/
 .idea/
 venv/
@@ -11,19 +51,12 @@ local.properties
 .settings/
 .loadpath
 .recommenders
-.classpath
-.DS_Store
 .class
-.project
-*.iml
 htmlReport/
 out/
 *.ilk
 *.pdb
-.vscode/
-out/
 testing/
-demo/
 #puzzledata.txt
 
 # External tool builders
@@ -41,9 +74,6 @@ demo/
 # CDT- autotools
 .autotools
 
-# Java annotation processor (APT)
-.factorypath
-
 # PDT-specific (PHP Development Tools)
 .buildpath
 
@@ -55,9 +85,6 @@ demo/
 
 # TeXlipse plugin
 .texlipse
-
-# STS (Spring Tool Suite)
-.springBeans
 
 # Code Recommenders
 .recommenders/
