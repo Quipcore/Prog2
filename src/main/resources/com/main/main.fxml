@@ -9,36 +9,32 @@
 <?import javafx.scene.text.Text?>
 
 
-<VBox spacing="10.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.main.MainController">
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<VBox fx:id="vBox" xmlns:fx="http://javafx.com/fxml" fx:controller="com.main.MainController">
     <MenuBar fx:id="menuBar" onKeyPressed="#handleKeyInput">
-        <menus>
-            <Menu text="File">
-                <items>
-                    <MenuItem text="New"/>
-                    <MenuItem text="Open"/>
-                    <MenuItem text="Save"/>
-                    <MenuItem text="Save As"/>
-                    <SeparatorMenuItem  />
-                    <MenuItem text="Exit"/>
-                </items>
-            </Menu>
-            <Menu text="Edit">
-                <items>
-                    <MenuItem text="Copy"/>
-                    <MenuItem text="Cut"/>
-                    <MenuItem text="Paste"/>
-                </items>
-            </Menu>
-            <Menu text="Help">
-                <items>
-                    <MenuItem text="Search" disable="true"/>
-                    <MenuItem text="Online Manual" visible="false"/>
-                    <SeparatorMenuItem />
-                    <MenuItem text="About" onAction="#handleAboutAction"/>
-                </items>
-            </Menu>
-        </menus>
+        <Menu text="File">
+            <MenuItem text="New"/>
+            <MenuItem text="Open"/>
+            <MenuItem text="Save"/>
+            <MenuItem text="Save As"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="Exit"/>
+        </Menu>
+        <Menu text="Edit">
+            <MenuItem text="Copy"/>
+            <MenuItem text="Cut"/>
+            <MenuItem text="Paste"/>
+        </Menu>
+        <Menu text="Help">
+            <MenuItem text="Search" disable="true"/>
+            <MenuItem text="Online Manual" visible="false"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="About" onAction="#handleAboutAction"/>
+        </Menu>
+        <Menu text="Image">
+            <MenuItem text="Resize" onAction="#resizeImage"/>
+        </Menu>
     </MenuBar>
 
     <HBox style="-fx-background-color: lightgrey" alignment="CENTER" spacing="20">
@@ -69,9 +65,7 @@
         <Button text="Change Connection"/>
     </HBox>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-
-    <Label fx:id="textBox" />
-    <Button text="Click Me!" onAction="#onClickMeButtonClick"/>
+    <ImageView fx:id="imageView">
+        <Image fx:id="mapImage" url="@../main/img/map.PNG"/>
+    </ImageView>
 </VBox>

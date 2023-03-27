@@ -12,7 +12,6 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 750, 500);
         stage.setTitle("Paths");
-        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
@@ -20,6 +19,9 @@ public class Main extends Application {
     public static void main(String[] args) {
         ListGraph<Node> graph = new ListGraph<>();
 
+        int num = 1;
+        num = 2 << num;
+        System.out.println(num);
         launch();
     }
 }
