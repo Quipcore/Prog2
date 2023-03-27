@@ -1,9 +1,9 @@
-package com.example.prog2;
+package com.main;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class MainController {
 
     boolean clicked = false;
 
