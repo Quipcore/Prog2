@@ -10,8 +10,9 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 500, 500);
+        Scene scene = new Scene(fxmlLoader.load(), 750, 500);
         stage.setTitle("Paths");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }

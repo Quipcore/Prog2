@@ -4,17 +4,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyEvent;
 
 public class MainController {
 
     @FXML
-    private Button loadButton;
+    private Button newConnectionButton;
     @FXML
-    private Button saveButton;
+    private Button findPathButton;
     @FXML
-    private Button exitButton;
-    boolean clicked = false;
-
+    private Button newPlaceButton;
+    @FXML
+    private Button showConnectionButton;
     @FXML
     private Label welcomeText;
 
@@ -27,23 +28,29 @@ public class MainController {
 
     @FXML
     protected void onClickMeButtonClick(){
-        String text = !clicked ? "Yay" : "Noooo";
-        textBox.setText(text);
-        clicked = !clicked;
-        //textBox.setTranslateX(100); //<-- setTranslate to change pos
+        String text = "adbababng";
+    }
+
+
+    @FXML
+    protected void onNewPlaceButtonClick(ActionEvent actionEvent) {
     }
 
     @FXML
-    protected void onExitButtonClick(){
-        exitButton.applyCss();
-        //System.exit(0);
+    protected void onShowConnectionButtonClick(ActionEvent actionEvent) {
     }
 
     @FXML
-    protected void onSaveButtonClick(ActionEvent actionEvent) {
+    protected void onFindPathButtonClick(ActionEvent actionEvent) {
     }
 
     @FXML
-    protected void OnLoadButtonClick(ActionEvent actionEvent) {
+    protected void onNewConnectionButtonClick(ActionEvent actionEvent) {
+    }
+
+    public void handleKeyInput(KeyEvent keyEvent) {
+    }
+
+    public void handleAboutAction(ActionEvent actionEvent) {
     }
 }

@@ -11,22 +11,62 @@
 
 <VBox spacing="10.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.main.MainController">
-    <HBox style="-fx-background-color: gray">
-        <Button text="exit"
-                fx:id="exitButton"
-                onAction="#onExitButtonClick"
-                styleClass="exit-button"
-                stylesheets="@../main/hbox.css"/>
-        <Button text="save"
-                fx:id="saveButton"
-                onAction="#onSaveButtonClick"
-                styleClass="save-button"
-                stylesheets="@../main/hbox.css"/>
-        <Button text="load"
-                fx:id="loadButton"
-                onAction="#OnLoadButtonClick"
-                styleClass="load-button"
-                stylesheets="@../main/hbox.css"/>
+    <MenuBar fx:id="menuBar" onKeyPressed="#handleKeyInput">
+        <menus>
+            <Menu text="File">
+                <items>
+                    <MenuItem text="New"/>
+                    <MenuItem text="Open"/>
+                    <MenuItem text="Save"/>
+                    <MenuItem text="Save As"/>
+                    <SeparatorMenuItem  />
+                    <MenuItem text="Exit"/>
+                </items>
+            </Menu>
+            <Menu text="Edit">
+                <items>
+                    <MenuItem text="Copy"/>
+                    <MenuItem text="Cut"/>
+                    <MenuItem text="Paste"/>
+                </items>
+            </Menu>
+            <Menu text="Help">
+                <items>
+                    <MenuItem text="Search" disable="true"/>
+                    <MenuItem text="Online Manual" visible="false"/>
+                    <SeparatorMenuItem />
+                    <MenuItem text="About" onAction="#handleAboutAction"/>
+                </items>
+            </Menu>
+        </menus>
+    </MenuBar>
+
+    <HBox style="-fx-background-color: lightgrey" alignment="CENTER" spacing="20">
+        <Button text="Find Path"
+                fx:id="findPathButton"
+                onAction="#onFindPathButtonClick"
+                styleClass="findPath-button"
+                stylesheets="@../main/hbox.css"
+        />
+        <Button text="Show Connection"
+                fx:id="showConnectionButton"
+                onAction="#onShowConnectionButtonClick"
+                styleClass="showConnection-button"
+                stylesheets="@../main/hbox.css"
+        />
+        <Button text="New Place"
+                fx:id="newPlaceButton"
+                onAction="#onNewPlaceButtonClick"
+                styleClass="newPlace-button"
+                stylesheets="@../main/hbox.css"
+        />
+        <Button text="New Connection"
+                fx:id="newConnectionButton"
+                onAction="#onNewConnectionButtonClick"
+                styleClass="newConnection-button"
+                stylesheets="@../main/hbox.css"
+        />
+        <Button text="Change Connection"/>
     </HBox>
 
     <Label fx:id="welcomeText"/>
