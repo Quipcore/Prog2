@@ -6,12 +6,28 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+
+<VBox spacing="10.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.main.MainController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+    <HBox style="-fx-background-color: gray">
+        <Button text="exit"
+                fx:id="exitButton"
+                onAction="#onExitButtonClick"
+                styleClass="exit-button"
+                stylesheets="@../main/hbox.css"/>
+        <Button text="save"
+                fx:id="saveButton"
+                onAction="#onSaveButtonClick"
+                styleClass="save-button"
+                stylesheets="@../main/hbox.css"/>
+        <Button text="load"
+                fx:id="loadButton"
+                onAction="#OnLoadButtonClick"
+                styleClass="load-button"
+                stylesheets="@../main/hbox.css"/>
+    </HBox>
 
     <Label fx:id="welcomeText"/>
     <Button text="Hello!" onAction="#onHelloButtonClick"/>
