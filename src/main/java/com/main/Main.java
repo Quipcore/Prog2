@@ -17,11 +17,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        ListGraph<Node> graph = new ListGraph<>();
-
-        int num = 1;
-        num = 2 << num;
-        System.out.println(num);
         launch();
     }
 }

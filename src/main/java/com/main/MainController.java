@@ -62,5 +62,12 @@ public class MainController {
         DoubleBinding newHeight = vBox.heightProperty().subtract(hBox.getHeight() + menuBar.getHeight());
         imageView.fitWidthProperty().bind(newWidth);
         imageView.fitHeightProperty().bind(newHeight);
+
+        System.out.println(actionEvent);
+    }
+
+    public void initialize(){
+        resizeImage(null);
+        System.out.println(mapImage.getUrl());
     }
 }
