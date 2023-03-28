@@ -1,5 +1,6 @@
 package com.main;
 
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -8,10 +9,13 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class MainController {
 
+    @FXML
+    private HBox hBox;
     @FXML
     private ImageView imageView;
     @FXML
@@ -28,21 +32,6 @@ public class MainController {
     private Button newPlaceButton;
     @FXML
     private Button showConnectionButton;
-    @FXML
-    private Label welcomeText;
-
-    @FXML
-    private Label textBox;
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
-
-    @FXML
-    protected void onClickMeButtonClick(){
-        String text = "adbababng";
-    }
-
 
     @FXML
     protected void onNewPlaceButtonClick(ActionEvent actionEvent) {
@@ -67,6 +56,19 @@ public class MainController {
     }
 
     public void resizeImage(ActionEvent actionEvent) {
-        System.out.printf("Requested Image width: %s",String.valueOf(mapImage.getRequestedWidth()));
+
+        System.out.println(vBox.heightProperty());
+        System.out.println(vBox.widthProperty());
+
+        ReadOnlyDoubleProperty boundingImageHeight = vBox.heightProperty();
+        boundingImageHeight.subtract(menuBar.heightProperty());
+        boundingImageHeight.subtract(hBox.heightProperty());
+
+        imageView.setPreserveRatio(false);
+        imageView.fitHeightProperty().bind(vBox.heightProperty());
+        imageView.fitWidthProperty().bind(vBox.widthProperty());
+//
+//        imageView.setFitHeight(vBox.getHeight());
+//        imageView.setFitWidth(vBox.getWidth());
     }
 }

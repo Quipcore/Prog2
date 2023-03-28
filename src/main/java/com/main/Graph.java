@@ -9,7 +9,7 @@ public interface Graph <T> {
     void connect(T node1, T node2) throws NoSuchElementException,IllegalArgumentException,IllegalStateException;
     void disconnect(T node1, T node2, String edgeName, int weight) throws NoSuchElementException, IllegalStateException;
     void setConnectionWeight(Edge<T> edge, int weight) throws NoSuchElementException, IllegalArgumentException;
-    T getNodes();
+    List<T> getNodes();
     Edge<T> getEdgeFrom(T node) throws NoSuchElementException;
     Edge<T> getEdgeBetween(T node1, T node2) throws NoSuchElementException;
     String toString();

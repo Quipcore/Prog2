@@ -1,9 +1,14 @@
 package com.main;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 public class ListGraph <T> implements Graph<T> {
+
+    List<Edge<T>> edges = new LinkedList<>();
+    List<T> nodes = new LinkedList<>();
+
     @Override
     public void add(T node1, T node2) {
 
@@ -26,17 +31,20 @@ public class ListGraph <T> implements Graph<T> {
 
     @Override
     public void setConnectionWeight(Edge<T> edge, int weight) throws NoSuchElementException, IllegalArgumentException {
+        if(weight <= 0){throw new IllegalArgumentException();}
+        if(!edges.contains(edge)){throw new NoSuchElementException();}
 
+        edge.setWeight(weight);
     }
 
     @Override
-    public T getNodes() {
-        return null;
+    public List<T> getNodes() {
+        return nodes;
     }
 
     @Override
     public Edge<T> getEdgeFrom(T node) throws NoSuchElementException {
-        return null;
+        throw new NoSuchElementException();
     }
 
     @Override

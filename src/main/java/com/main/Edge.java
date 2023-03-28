@@ -8,7 +8,7 @@ public class Edge <T> {
     private T node1;
     private T node2;
 
-    public T getDestination(){return null;}
+    public T getDestination(){return node2;}
     public int getWeight(){return weight;}
     public void setWeight(int weight){this.weight = weight;}
     public String getName(){return name;}

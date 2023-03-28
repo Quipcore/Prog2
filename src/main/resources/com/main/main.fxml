@@ -37,7 +37,7 @@
         </Menu>
     </MenuBar>
 
-    <HBox style="-fx-background-color: lightgrey" alignment="CENTER" spacing="20">
+    <HBox fx:id="hBox" style="-fx-background-color: lightgrey" alignment="CENTER" spacing="20">
         <Button text="Find Path"
                 fx:id="findPathButton"
                 onAction="#onFindPathButtonClick"
