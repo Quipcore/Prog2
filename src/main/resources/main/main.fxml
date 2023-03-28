@@ -11,7 +11,7 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<VBox fx:id="vBox" xmlns:fx="http://javafx.com/fxml" fx:controller="com.main.MainController">
+<VBox fx:id="vBox" xmlns:fx="http://javafx.com/fxml" fx:controller="main.MainController">
     <MenuBar fx:id="menuBar" onKeyPressed="#handleKeyInput" styleClass="@menuBar.css">
         <Menu text="File">
             <MenuItem text="New"/>

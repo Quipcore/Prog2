@@ -6,6 +6,6 @@ module com.main {
     opens com.example.prog2 to javafx.fxml;
     exports com.example.prog2;
 */
-    opens com.main to javafx.fxml;
-    exports com.main;
+    opens main to javafx.fxml;
+    exports main;
 }

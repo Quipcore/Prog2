@@ -1,4 +1,4 @@
-package com.main;
+package main;
 
 public class Node {
     int xPos;
