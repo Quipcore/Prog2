@@ -1,5 +1,6 @@
 package com.main;
 
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -56,19 +57,10 @@ public class MainController {
     }
 
     public void resizeImage(ActionEvent actionEvent) {
-
-        System.out.println(vBox.heightProperty());
-        System.out.println(vBox.widthProperty());
-
-        ReadOnlyDoubleProperty boundingImageHeight = vBox.heightProperty();
-        boundingImageHeight.subtract(menuBar.heightProperty());
-        boundingImageHeight.subtract(hBox.heightProperty());
-
-        imageView.setPreserveRatio(false);
-        imageView.fitHeightProperty().bind(vBox.heightProperty());
-        imageView.fitWidthProperty().bind(vBox.widthProperty());
-//
-//        imageView.setFitHeight(vBox.getHeight());
-//        imageView.setFitWidth(vBox.getWidth());
+        //Resize image to fit the window
+        DoubleBinding newWidth = hBox.widthProperty().subtract(0);
+        DoubleBinding newHeight = vBox.heightProperty().subtract(hBox.getHeight() + menuBar.getHeight());
+        imageView.fitWidthProperty().bind(newWidth);
+        imageView.fitHeightProperty().bind(newHeight);
     }
 }
