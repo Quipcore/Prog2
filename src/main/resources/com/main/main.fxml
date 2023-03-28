@@ -12,7 +12,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <VBox fx:id="vBox" xmlns:fx="http://javafx.com/fxml" fx:controller="com.main.MainController">
-    <MenuBar fx:id="menuBar" onKeyPressed="#handleKeyInput">
+    <MenuBar fx:id="menuBar" onKeyPressed="#handleKeyInput" styleClass="@menuBar.css">
         <Menu text="File">
             <MenuItem text="New"/>
             <MenuItem text="Open"/>
@@ -21,19 +21,10 @@
             <SeparatorMenuItem/>
             <MenuItem text="Exit"/>
         </Menu>
-        <Menu text="Edit">
-            <MenuItem text="Copy"/>
-            <MenuItem text="Cut"/>
-            <MenuItem text="Paste"/>
-        </Menu>
-        <Menu text="Help">
-            <MenuItem text="Search" disable="true"/>
-            <MenuItem text="Online Manual" visible="false"/>
-            <SeparatorMenuItem/>
-            <MenuItem text="About" onAction="#handleAboutAction"/>
-        </Menu>
-        <Menu text="Image">
-            <MenuItem text="Resize" onAction="#resizeImage"/>
+        <Menu text="Dev" styleClass="devMenu">
+            <MenuItem text="Resize image" onAction="#resizeImage"/>
+            <MenuItem text="Print image size" onAction="#printImageSize"/>
+            <MenuItem text="Print window size" onAction="#printWindowSize"/>
         </Menu>
     </MenuBar>
 
@@ -42,25 +33,25 @@
                 fx:id="findPathButton"
                 onAction="#onFindPathButtonClick"
                 styleClass="findPath-button"
-                stylesheets="@../main/hbox.css"
+                stylesheets="@hBox.css"
         />
         <Button text="Show Connection"
                 fx:id="showConnectionButton"
                 onAction="#onShowConnectionButtonClick"
                 styleClass="showConnection-button"
-                stylesheets="@../main/hbox.css"
+                stylesheets="@hBox.css"
         />
         <Button text="New Place"
                 fx:id="newPlaceButton"
                 onAction="#onNewPlaceButtonClick"
                 styleClass="newPlace-button"
-                stylesheets="@../main/hbox.css"
+                stylesheets="@hBox.css"
         />
         <Button text="New Connection"
                 fx:id="newConnectionButton"
                 onAction="#onNewConnectionButtonClick"
                 styleClass="newConnection-button"
-                stylesheets="@../main/hbox.css"
+                stylesheets="@hBox.css"
         />
         <Button text="Change Connection"/>
     </HBox>

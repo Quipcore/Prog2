@@ -10,6 +10,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -62,12 +63,17 @@ public class MainController {
         DoubleBinding newHeight = vBox.heightProperty().subtract(hBox.getHeight() + menuBar.getHeight());
         imageView.fitWidthProperty().bind(newWidth);
         imageView.fitHeightProperty().bind(newHeight);
-
-        System.out.println(actionEvent);
     }
 
     public void initialize(){
-        resizeImage(null);
-        System.out.println(mapImage.getUrl());
+        //Image resize just works when this empty method is called in main
+    }
+
+    public void printImageSize(ActionEvent actionEvent) {
+        System.out.println("Image size: " + imageView.getFitWidth() + ", " + imageView.getFitHeight());
+    }
+
+    public void printWindowSize(ActionEvent actionEvent) {
+        System.out.println("Window size: " + vBox.getWidth() + ", " + vBox.getHeight());
     }
 }
