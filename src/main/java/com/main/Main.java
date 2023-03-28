@@ -11,7 +11,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
 
-        Scene scene = new Scene(fxmlLoader.load(), 750, 500);
+        Scene scene = new Scene(fxmlLoader.load(), 750, 500); //Setting scene w/h might be causing problems with images. We are loading image THEN resizing INSTEAD OF resizing THEN setting image
         stage.setTitle("Paths");
         stage.setScene(scene);
         stage.setMinHeight(500);
