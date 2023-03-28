@@ -66,7 +66,7 @@ public class MainController {
     }
 
     public void initialize(){
-        //Image resize just works when this empty method is called in main
+
     }
 
     public void printImageSize(ActionEvent actionEvent) {

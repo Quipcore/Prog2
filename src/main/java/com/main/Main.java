@@ -11,13 +11,13 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
 
-        Scene scene = new Scene(fxmlLoader.load(), 750, 500); //Setting scene w/h might be causing problems with images. We are loading image THEN resizing INSTEAD OF resizing THEN setting image
+        Scene scene = new Scene(fxmlLoader.load(), 750, 500);
         stage.setTitle("Paths");
         stage.setScene(scene);
         stage.setMinHeight(500);
         stage.setMinWidth(570);
         stage.show();
-        fxmlLoader.<MainController>getController().resizeImage(null);
+        fxmlLoader.<MainController>getController().resizeImage(null); //This call only works after stage.show. WHY?!?!?!?!
     }
 
     public static void main(String[] args) {
