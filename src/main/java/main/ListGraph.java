@@ -110,11 +110,55 @@ public class ListGraph<T> implements Graph<T> {
 
     @Override
     public boolean pathExists(T node1, T node2) {
-        return false;
+        if (!nodes.contains(node1) || !nodes.contains(node2)) {
+            return false;
+        }
+        return getPath(node1, node2) != null;
     }
 
     @Override
     public List<Edge<T>> getPath(T node1, T node2) {
+
+        //Search for a path between the two nodes.
+        //If a path exists, return a list of edges that make up the path.
+        //If a path does not exist, return null.
+        //This method should use a breadth first search algorithm.
+        Map<T, Float> distance = new HashMap<>();
+        distance.put(node1, 0f);
+
+        Map<T, Float> previous = new HashMap<>();
+
+        PriorityQueue<T> nodeQueue = new PriorityQueue<>(Comparator.comparing(distance::get));
+
+        for(T node : nodes){
+            if(!node.equals(node1)) {
+                distance.put(node, Float.POSITIVE_INFINITY);
+                previous.put(node, null);
+            }
+
+            nodeQueue.add(node);
+        }
+
+        while(!nodeQueue.isEmpty()){
+            T u = nodeQueue.poll();
+            for(Edge<T> edge : getEdgeFrom(u)){
+                T v = edge.getDestination();
+                float alt = distance.get(u) + edge.getWeight();
+                if(alt < distance.get(v)){
+                    distance.put(v, alt);
+                    previous.put(v, distance.get(u));
+                    nodeQueue.remove(v);
+                    nodeQueue.add(v);
+                }
+            }
+            if(u.equals(node2)){
+                break;
+            }
+        }
+
+
+
+
         return null;
     }
 }
