@@ -11,26 +11,19 @@ import java.util.List;
 public class Main extends Application {
 
     class Node{
-        private int x;
-        private int y;
         private int id;
 
-        public Node(int x, int y, int id){
-            this.x = x;
-            this.y = y;
+        public Node(int id){
             this.id = id;
-        }
-
-        public int getX(){
-            return x;
-        }
-
-        public int getY(){
-            return y;
         }
 
         public int getID(){
             return id;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(id);
         }
     }
 
@@ -51,9 +44,6 @@ public class Main extends Application {
         Main main = new Main();
         main.runSearch();
 
-
-
-
         launch();
     }
 
@@ -61,18 +51,32 @@ public class Main extends Application {
         ListGraph<Node> graph = new ListGraph<>();
         List<Node> nodeList = new ArrayList<>();
 
-        for(int i = 0; i < 10; i++){
-            Node node = new Node(i, i, i);
-            graph.add(node);
-            nodeList.add(node);
-        }
-        for(int i = 0; i < 10-1; i++){
-            graph.connect(nodeList.get(i), nodeList.get(i+1), "Edge " + i, 1);
+        int numOfNodes = 6;
+        for(int i = 0; i < numOfNodes + 1; i++){
+            nodeList.add(new Node(i));
+            graph.add(nodeList.get(i));
         }
 
+        graph.connect(nodeList.get(0), nodeList.get(1), "Edge 1", 1);
+        graph.connect(nodeList.get(1), nodeList.get(2), "Edge 2", 1);
+        graph.connect(nodeList.get(2), nodeList.get(3), "Edge 3", 1);
+        graph.connect(nodeList.get(2), nodeList.get(4), "Edge 4", 1);
 
-        List<Edge<Node>> path = graph.getPath(nodeList.get(0), nodeList.get(3));
-        System.out.println(path);
+        graph.connect(nodeList.get(5), nodeList.get(5), "Edge 5", 1);
+        graph.connect(nodeList.get(5), nodeList.get(6), "Edge 6", 1);
+
+        graph.connect(nodeList.get(0), nodeList.get(4), "Edge 7", 1);
+
+
+
+        List<Edge<Node>> path = graph.getPath(nodeList.get(0), nodeList.get(4));
+        if(path == null){
+            System.out.println("No path found");
+
+        }else {
+            System.out.println(path);
+        }
+
     }
 
 

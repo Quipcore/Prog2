@@ -98,9 +98,9 @@ public class ListGraph<T> implements Graph<T> {
 
         Edge<T> tempEdge = new Edge<>(node1, node2, "", -1);
         String tempEdgeNodesHash = tempEdge.toString().split(";")[0];
-        for(Edge<T> edge : edges){
+        for (Edge<T> edge : edges) {
             String edgeNodeHash = edge.toString().split(";")[0];
-            if(edgeNodeHash.equals(tempEdgeNodesHash)){
+            if (edgeNodeHash.equals(tempEdgeNodesHash)) {
                 return edge;
             }
         }
@@ -116,22 +116,27 @@ public class ListGraph<T> implements Graph<T> {
         return getPath(node1, node2) != null;
     }
 
+
+    //Write javadoc to getPath
+
+    /**
+     * Link to wikipedia article on Dijkstra's algorithm: shorturl.at/blrFG
+     *
+     * @param origin
+     * @param destination
+     * @return
+     */
     @Override
-    public List<Edge<T>> getPath(T node1, T node2) {
-
-        //Search for a path between the two nodes.
-        //If a path exists, return a list of edges that make up the path.
-        //If a path does not exist, return null.
-        //This method should use a breadth first search algorithm.
+    public List<Edge<T>> getPath(T origin, T destination) {
         Map<T, Float> distance = new HashMap<>();
-        distance.put(node1, 0f);
+        distance.put(origin, 0f);
 
-        Map<T, Float> previous = new HashMap<>();
+        Map<T, T> previous = new HashMap<>();
 
         PriorityQueue<T> nodeQueue = new PriorityQueue<>(Comparator.comparing(distance::get));
 
-        for(T node : nodes){
-            if(!node.equals(node1)) {
+        for (T node : nodes) {
+            if (!node.equals(origin)) {
                 distance.put(node, Float.POSITIVE_INFINITY);
                 previous.put(node, null);
             }
@@ -139,26 +144,39 @@ public class ListGraph<T> implements Graph<T> {
             nodeQueue.add(node);
         }
 
-        while(!nodeQueue.isEmpty()){
+        while (!nodeQueue.isEmpty()) {
             T u = nodeQueue.poll();
-            for(Edge<T> edge : getEdgeFrom(u)){
+            for (Edge<T> edge : getEdgeFrom(u)) {
                 T v = edge.getDestination();
                 float alt = distance.get(u) + edge.getWeight();
-                if(alt < distance.get(v)){
+                if (alt < distance.get(v)) {
                     distance.put(v, alt);
-                    previous.put(v, distance.get(u));
+                    previous.put(v, u);
                     nodeQueue.remove(v);
                     nodeQueue.add(v);
                 }
             }
-            if(u.equals(node2)){
+            if (u.equals(destination)) {
                 break;
             }
         }
 
+        List<Edge<T>> path = new ArrayList<>();
+        T current = destination;
 
-
-
-        return null;
+        try {
+            while (!current.equals(origin)) {
+                if (!previous.containsKey(current)) {
+                    return null;
+                }
+                path.add(getEdgeBetween(previous.get(current), current));
+                current = previous.get(current);
+            }
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+        path.add(getEdgeBetween(origin, current));
+        Collections.reverse(path);
+        return path;
     }
 }
