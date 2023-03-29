@@ -1,13 +1,13 @@
 package main;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 public class ListGraph <T> implements Graph<T> {
 
-    List<Edge<T>> edges = new LinkedList<>();
-    List<T> nodes = new LinkedList<>();
+    List<Edge<T>> edges = new ArrayList<>();
+    List<T> nodes = new ArrayList<>();
 
     @Override
     public void add(T node1, T node2) {
