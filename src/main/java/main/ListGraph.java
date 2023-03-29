@@ -4,7 +4,7 @@ import java.util.*;
 
 public class ListGraph<T> implements Graph<T> {
 
-    private Set<Edge<T>> edges = new HashSet<>();
+    private HashMap<T,Set<Edge<T>>> edgeMap = new HashMap<>();
     private Set<T> nodes = new HashSet<>();
 
 
@@ -17,8 +17,11 @@ public class ListGraph<T> implements Graph<T> {
         if (!nodes.remove(node)) {
             throw new NoSuchElementException();
         }
+        edgeMap.remove(node);
 
-        edges.removeIf(edge -> edge.getDestination().equals(node));
+        for(T nodeTo : nodes){
+            edgeMap.get(nodeTo).removeIf(edge -> edge.getDestination().equals(nodeTo));
+        }
     }
 
     @Override
@@ -29,13 +32,32 @@ public class ListGraph<T> implements Graph<T> {
         if (weight < 0) {
             throw new IllegalArgumentException();
         }
-        if (edgeExists(node1, node2)) {
-            throw new IllegalStateException();
+
+        try{
+            if (edgeExists(node1, node2)) {
+                throw new IllegalStateException();
+            }
+        }
+        catch (NoSuchElementException e){
+            //do nothing
         }
 
-        edges.add(new Edge<>(node1, node2, edgeName, weight));
-        edges.add(new Edge<>(node2, node1, edgeName, weight));
+        addToEdgeMap(node1, node2, edgeName, weight);
+        addToEdgeMap(node2, node1, edgeName, weight);
+//        edgeMap.add(new Edge<>(node1, node2, edgeName, weight));
+//        edgeMap.add(new Edge<>(node2, node1, edgeName, weight));
     }
+
+    private void addToEdgeMap(T node1, T node2, String edgeName, int weight){
+        if(edgeMap.containsKey(node1)) {
+            edgeMap.get(node1).add(new Edge<>(node1, node2, edgeName, weight));
+        }
+        else {
+            edgeMap.put(node1, new HashSet<>());
+            edgeMap.get(node1).add(new Edge<>(node1, node2, edgeName, weight));
+        }
+    }
+
 
     private boolean edgeExists(T node1, T node2) {
         return getEdgeBetween(node1, node2) != null;
@@ -50,8 +72,10 @@ public class ListGraph<T> implements Graph<T> {
             throw new IllegalStateException();
         }
 
-        edges.remove(getEdgeBetween(node1, node2));
-        edges.remove(getEdgeBetween(node2, node1));
+        edgeMap.get(node1).remove(getEdgeBetween(node1, node2));
+        edgeMap.get(node2).remove(getEdgeBetween(node2, node1));
+//        edgeMap.remove(getEdgeBetween(node1, node2));
+//        edgeMap.remove(getEdgeBetween(node2, node1));
 
     }
 
@@ -89,18 +113,16 @@ public class ListGraph<T> implements Graph<T> {
         return nodeEdges;
     }
 
-    //TODO: Fix this implementation, move away from the default implementation of hascode().
     @Override
     public Edge<T> getEdgeBetween(T node1, T node2) throws NoSuchElementException {
         if (!nodes.contains(node1) || !nodes.contains(node2)) {
             throw new NoSuchElementException();
         }
-
-        Edge<T> tempEdge = new Edge<>(node1, node2, "", -1);
-        String tempEdgeNodesHash = tempEdge.toString().split(";")[0];
-        for (Edge<T> edge : edges) {
-            String edgeNodeHash = edge.toString().split(";")[0];
-            if (edgeNodeHash.equals(tempEdgeNodesHash)) {
+        Set<Edge<T>> edges = edgeMap.get(node1);
+        if (edges == null)
+            return null;
+        for(Edge<T> edge : edges){
+            if(edge.getDestination().equals(node2)){
                 return edge;
             }
         }
@@ -166,16 +188,12 @@ public class ListGraph<T> implements Graph<T> {
 
         try {
             while (!current.equals(origin)) {
-                if (!previous.containsKey(current)) {
-                    return null;
-                }
                 path.add(getEdgeBetween(previous.get(current), current));
                 current = previous.get(current);
             }
         } catch (NoSuchElementException e) {
             return null;
         }
-        path.add(getEdgeBetween(origin, current));
         Collections.reverse(path);
         return path;
     }

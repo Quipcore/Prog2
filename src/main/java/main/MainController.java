@@ -9,10 +9,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class MainController {
 
+    @FXML
+    private Pane pane;
     @FXML
     private HBox hBox;
     @FXML
@@ -56,8 +59,9 @@ public class MainController {
 
     public void resizeImage(ActionEvent actionEvent) {
         //Resize image to fit the window
-        DoubleBinding newWidth = hBox.widthProperty().subtract(0);
+        DoubleBinding newWidth = pane.widthProperty().subtract(0);
         DoubleBinding newHeight = vBox.heightProperty().subtract(hBox.getHeight() + menuBar.getHeight());
+        //newHeight = pane.heightProperty().subtract(0);
         imageView.fitWidthProperty().bind(newWidth);
         imageView.fitHeightProperty().bind(newHeight);
     }
@@ -72,5 +76,9 @@ public class MainController {
 
     public void printWindowSize(ActionEvent actionEvent) {
         System.out.println("Window size: " + vBox.getWidth() + ", " + vBox.getHeight());
+    }
+
+    public void printPaneSize(ActionEvent actionEvent) {
+        System.out.println("Pane size: " + pane.getWidth() + ", " + pane.getHeight());
     }
 }

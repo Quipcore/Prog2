@@ -30,7 +30,6 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
-
         Scene scene = new Scene(fxmlLoader.load(), 750, 500);
         stage.setTitle("Paths");
         stage.setScene(scene);
@@ -67,9 +66,16 @@ public class Main extends Application {
 
         graph.connect(nodeList.get(0), nodeList.get(4), "Edge 7", 1);
 
+        /*
 
+        0 - 1 - 2 - 3
+         \      |
+          \- - -4
 
-        List<Edge<Node>> path = graph.getPath(nodeList.get(0), nodeList.get(4));
+        5 - 6
+       */
+
+        List<Edge<Node>> path = graph.getPath(nodeList.get(0), nodeList.get(3));
         if(path == null){
             System.out.println("No path found");
 

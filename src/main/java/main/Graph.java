@@ -17,5 +17,5 @@ public interface Graph <T> {
     Edge<T> getEdgeBetween(T node1, T node2) throws NoSuchElementException;
     String toString();
     boolean pathExists(T node1, T node2);
-    List<Edge<T>> getPath (T node1, T node2);
+    List<Edge<T>> getPath (T origin, T destination);
 }

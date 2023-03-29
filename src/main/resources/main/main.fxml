@@ -55,8 +55,10 @@
         />
         <Button text="Change Connection"/>
     </HBox>
+    <Pane fx:id="pane">
+        <ImageView fx:id="imageView">
+            <Image fx:id="mapImage" url="@images/map.PNG"/>
+        </ImageView>
+    </Pane>
 
-    <ImageView fx:id="imageView">
-        <Image fx:id="mapImage" url="@images/map.PNG"/>
-    </ImageView>
 </VBox>
