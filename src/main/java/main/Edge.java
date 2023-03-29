@@ -5,12 +5,20 @@ public class Edge <T> {
     private int weight;
     private String name;
 
-    private T node1;
-    private T node2;
+    private T fromNode;
+    private T toNode;
 
-    public T getDestination(){return node2;}
+    public Edge(T fromNode, T toNode, String edgeName, int weight){
+        this.fromNode = fromNode;
+        this.toNode = toNode;
+        this.name = edgeName;
+        setWeight(weight);
+    }
+
+    public T getDestination(){return toNode;}
     public int getWeight(){return weight;}
     public void setWeight(int weight){this.weight = weight;}
     public String getName(){return name;}
-    public String toString(){return "";}
+    public String toString(){
+        return String.format("%d,%d;%s,%s",fromNode.hashCode(),toNode.hashCode(),name,weight);}
 }
