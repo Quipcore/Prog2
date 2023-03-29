@@ -89,6 +89,7 @@ public class ListGraph<T> implements Graph<T> {
         return nodeEdges;
     }
 
+    //TODO: Fix this implementation, move away from the default implementation of hascode().
     @Override
     public Edge<T> getEdgeBetween(T node1, T node2) throws NoSuchElementException {
         if (!nodes.contains(node1) || !nodes.contains(node2)) {
@@ -96,10 +97,10 @@ public class ListGraph<T> implements Graph<T> {
         }
 
         Edge<T> tempEdge = new Edge<>(node1, node2, "", -1);
-        String tempNodeHash = tempEdge.toString().split(";")[0];
+        String tempEdgeNodesHash = tempEdge.toString().split(";")[0];
         for(Edge<T> edge : edges){
             String edgeNodeHash = edge.toString().split(";")[0];
-            if(edgeNodeHash.equals(tempNodeHash)){
+            if(edgeNodeHash.equals(tempEdgeNodesHash)){
                 return edge;
             }
         }
