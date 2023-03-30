@@ -19,7 +19,7 @@
             <MenuItem text="Save"/>
             <MenuItem text="Save As"/>
             <SeparatorMenuItem/>
-            <MenuItem text="Exit"/>
+            <MenuItem text="Exit" onAction="#onExitbuttonClick"/>
         </Menu>
         <Menu text="Dev" styleClass="devMenu">
             <MenuItem text="Resize image" onAction="#resizeImage"/>
@@ -60,5 +60,4 @@
             <Image fx:id="mapImage" url="@images/map.PNG"/>
         </ImageView>
     </Pane>
-
 </VBox>

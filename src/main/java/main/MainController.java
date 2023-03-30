@@ -81,4 +81,8 @@ public class MainController {
     public void printPaneSize(ActionEvent actionEvent) {
         System.out.println("Pane size: " + pane.getWidth() + ", " + pane.getHeight());
     }
+
+    public void onExitbuttonClick(ActionEvent actionEvent) {
+        System.exit(0);
+    }
 }

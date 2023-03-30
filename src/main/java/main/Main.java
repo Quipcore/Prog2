@@ -57,7 +57,7 @@ public class Main extends Application {
         }
 
         graph.connect(nodeList.get(0), nodeList.get(1), "Edge 1", 1);
-        graph.connect(nodeList.get(1), nodeList.get(2), "Edge 2", 1);
+        graph.connect(nodeList.get(1), nodeList.get(2), "Edge 2", 2);
         graph.connect(nodeList.get(2), nodeList.get(3), "Edge 3", 1);
         graph.connect(nodeList.get(2), nodeList.get(4), "Edge 4", 1);
 
@@ -75,12 +75,17 @@ public class Main extends Application {
         5 - 6
        */
 
-        List<Edge<Node>> path = graph.getPath(nodeList.get(0), nodeList.get(3));
+        List<Edge<Node>> path = graph.getPath(nodeList.get(0), nodeList.get(2));
         if(path == null){
             System.out.println("No path found");
 
         }else {
-            System.out.println(path);
+            int accumulatedWeight = 0;
+            for (Edge<Node> edge: path) {
+                System.out.println(edge);
+                accumulatedWeight += edge.getWeight();
+            }
+            System.out.println("Accumulated weight: " + accumulatedWeight);
         }
 
     }

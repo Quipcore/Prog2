@@ -32,6 +32,6 @@ public class Edge<T> {
     }
 
     public String toString() {
-        return String.format("%d,%d;Name %s ;From %s, To %s", fromNode.hashCode(), toNode.hashCode(), name, fromNode, toNode);
+        return String.format("From %s, To %s, Weight %d", fromNode, toNode, weight);
     }
 }
