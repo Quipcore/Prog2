@@ -1,6 +1,8 @@
 package main;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -8,10 +10,17 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main extends Application {
+public class Main extends Application implements StageManager{
+
+    Stage stage;
+
+    @Override
+    public void resizeScene() {
+        this.stage.sizeToScene();
+    }
 
     class Node{
-        private int id;
+        private final int id;
 
         public Node(int id){
             this.id = id;
@@ -29,15 +38,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        this.stage = stage;
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 750, 500);
-        stage.setTitle("Paths");
-        stage.setScene(scene);
-        stage.setMinHeight(500);
-        stage.setMinWidth(570);
-        stage.show();
-        fxmlLoader.<MainController>getController().resizeImage(null); //This call only works after stage.show. WHY?!?!?!?!
+        Scene scene = new Scene(fxmlLoader.load());
+        fxmlLoader.<MainController>getController().setStageManager(this);
+        this.stage.setTitle("Paths");
+        this.stage.setScene(scene);
+        this.stage.sizeToScene();
+        this.stage.show();
     }
+
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -70,7 +80,7 @@ public class Main extends Application {
 
         0 - 1 - 2 - 3
          \      |
-          \- - -4
+          '- - -4
 
         5 - 6
        */
