@@ -33,14 +33,10 @@ public class ListGraph<T> implements Graph<T> {
             throw new IllegalArgumentException();
         }
 
-        try{
-            if (edgeExists(node1, node2)) {
-                throw new IllegalStateException();
-            }
+        if (edgeExists(node1, node2)) {
+            throw new IllegalStateException();
         }
-        catch (NoSuchElementException e){
-            //do nothing
-        }
+
 
         addToEdgeMap(node1, node2, edgeName, weight);
         addToEdgeMap(node2, node1, edgeName, weight);

@@ -1,4 +1,4 @@
-package main;
+package main.Controllers;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.event.ActionEvent;
@@ -15,17 +15,17 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import main.StageManager;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-public class MainController {
-    public <T> void setNode(Class<T> nodeClass) {
-    }
+public class MainController implements Controller {
 
-    private class Pin /*Might want to extend circle*/ {
+    private static class Pin /*Might want to extend circle*/ {
         private static boolean isClicked;
         private static Circle circle;
 
@@ -148,11 +148,13 @@ public class MainController {
     }
 
     @FXML
-    protected void onNewPlaceButtonClick(ActionEvent actionEvent) {
+    protected void onNewPlaceButtonClick(ActionEvent actionEvent) throws IOException {
+        stageManager.createPopup("test.fxml");
     }
 
     @FXML
-    protected void onNewConnectionButtonClick(ActionEvent actionEvent) {
+    protected void onNewConnectionButtonClick(ActionEvent actionEvent) throws IOException {
+        stageManager.createPopup("t2.fxml");
     }
 
     @FXML
@@ -230,4 +232,5 @@ public class MainController {
     public void setStageManager(StageManager manager) {
         this.stageManager = manager;
     }
+
 }

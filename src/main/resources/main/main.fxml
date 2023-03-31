@@ -11,7 +11,7 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<VBox fx:id="vBox" xmlns:fx="http://javafx.com/fxml" fx:controller="main.MainController">
+<VBox fx:id="vBox" xmlns:fx="http://javafx.com/fxml" fx:controller="main.Controllers.MainController">
     <MenuBar fx:id="menu" styleClass="@menuBar.css">
         <Menu text="File" fx:id="menuFile">
             <MenuItem text="New Map" fx:id="menuNewMap" onAction="#onMenuNewMapClick"/>

@@ -8,4 +8,6 @@ module com.main {
 */
     opens main to javafx.fxml;
     exports main;
+    exports main.Controllers;
+    opens main.Controllers to javafx.fxml;
 }

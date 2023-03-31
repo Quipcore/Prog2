@@ -1,12 +1,12 @@
 package main;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import main.Controllers.MainController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +17,17 @@ public class Main extends Application implements StageManager{
     @Override
     public void resizeStage() {
         this.stage.sizeToScene();
+    }
+
+    @Override
+    public void createPopup() {
+
+    }
+
+    @Override
+    public void createPopup(String fxml) throws IOException {
+        Popup popup = new Popup(fxml);
+        popup.display();
     }
 
     class Node{
@@ -41,9 +52,8 @@ public class Main extends Application implements StageManager{
         this.stage = stage;
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        MainController mainController = fxmlLoader.<MainController>getController();
+        MainController mainController = fxmlLoader.getController();
         mainController.setStageManager(this);
-        mainController.setNode(Node.class);
         this.stage.setTitle("Paths");
         this.stage.setScene(scene);
         this.stage.sizeToScene();
