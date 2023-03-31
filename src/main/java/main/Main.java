@@ -15,7 +15,7 @@ public class Main extends Application implements StageManager{
     Stage stage;
 
     @Override
-    public void resizeScene() {
+    public void resizeStage() {
         this.stage.sizeToScene();
     }
 
@@ -41,7 +41,9 @@ public class Main extends Application implements StageManager{
         this.stage = stage;
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        fxmlLoader.<MainController>getController().setStageManager(this);
+        MainController mainController = fxmlLoader.<MainController>getController();
+        mainController.setStageManager(this);
+        mainController.setNode(Node.class);
         this.stage.setTitle("Paths");
         this.stage.setScene(scene);
         this.stage.sizeToScene();

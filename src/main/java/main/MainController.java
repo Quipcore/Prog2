@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainController {
+    public <T> void setNode(Class<T> nodeClass) {
+    }
+
     private class Pin /*Might want to extend circle*/ {
         private static boolean isClicked;
         private static Circle circle;
@@ -113,7 +116,7 @@ public class MainController {
         mapImage = new Image(mapPath);
         imageView.setImage(mapImage);
         if(stageManager != null){
-            stageManager.resizeScene();
+            stageManager.resizeStage();
         }
     }
 
