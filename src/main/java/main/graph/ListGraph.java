@@ -1,6 +1,7 @@
-package main;
+package main.graph;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ListGraph<T> implements Graph<T> {
 
@@ -40,8 +41,6 @@ public class ListGraph<T> implements Graph<T> {
 
         addToEdgeMap(node1, node2, edgeName, weight);
         addToEdgeMap(node2, node1, edgeName, weight);
-//        edgeMap.add(new Edge<>(node1, node2, edgeName, weight));
-//        edgeMap.add(new Edge<>(node2, node1, edgeName, weight));
     }
 
     private void addToEdgeMap(T node1, T node2, String edgeName, int weight){
@@ -70,9 +69,6 @@ public class ListGraph<T> implements Graph<T> {
 
         edgeMap.get(node1).remove(getEdgeBetween(node1, node2));
         edgeMap.get(node2).remove(getEdgeBetween(node2, node1));
-//        edgeMap.remove(getEdgeBetween(node1, node2));
-//        edgeMap.remove(getEdgeBetween(node2, node1));
-
     }
 
     @Override
@@ -99,14 +95,17 @@ public class ListGraph<T> implements Graph<T> {
             throw new NoSuchElementException();
         }
 
-        Set<Edge<T>> nodeEdges = new HashSet<>();
-        for (T setNodes : nodes) {
-            if (edgeExists(node, setNodes)) {
-                nodeEdges.add(getEdgeBetween(node, setNodes));
-            }
-        }
-
-        return nodeEdges;
+        //        for (T setNodes : nodes) {
+//            if (edgeExists(node, setNodes)) {
+//                nodeEdges.add(getEdgeBetween(node, setNodes));
+//            }
+//        }
+//        Set<Edge<T>> nodeEdges = nodes.parallelStream()
+//                .filter(setNode -> edgeExists(node, setNode))
+//                .map(setNode -> getEdgeBetween(node, setNode)).collect(Collectors.toSet());
+        return nodes.parallelStream()
+                .filter(setNode -> edgeExists(node, setNode))
+                .map(setNode -> getEdgeBetween(node, setNode)).collect(Collectors.toSet());
     }
 
     @Override
@@ -114,9 +113,11 @@ public class ListGraph<T> implements Graph<T> {
         if (!nodes.contains(node1) || !nodes.contains(node2)) {
             throw new NoSuchElementException();
         }
+
         Set<Edge<T>> edges = edgeMap.get(node1);
         if (edges == null)
             return null;
+
         for(Edge<T> edge : edges){
             if(edge.getDestination().equals(node2)){
                 return edge;

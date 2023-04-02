@@ -1,4 +1,4 @@
-package main.Controllers;
+package main.controllers;
 
 import main.StageManager;
 

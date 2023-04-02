@@ -1,4 +1,4 @@
-package main.Controllers;
+package main.controllers;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.event.ActionEvent;
@@ -169,16 +169,33 @@ public class MainController implements Controller {
         }
 
         Pin pin = getPinOnMousePos(mouseEvent);
+
         if (pin != null) {
             pin.setClicked(true);
-        } else {
-            pin = new Pin(mouseEvent.getX(), mouseEvent.getY());
-            addPinToMap(pin);
+            return;
         }
+
+        pin = new Pin(mouseEvent.getX(), mouseEvent.getY());
+        addPinToMap(pin);
+
     }
 
     private Pin getPinOnMousePos(MouseEvent mouseEvent) {
-        for (Pin pin : pinList) {
+//        for (Pin pin : pinList) {
+//            double x1 = pin.getCircle().getCenterX();
+//            double y1 = pin.getCircle().getCenterY();
+//
+//            double x2 = mouseEvent.getX();
+//            double y2 = mouseEvent.getY();
+//
+//            double distanceBetweenPoints = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+//            double pinRadius = pin.getCircle().getRadius();
+//
+//            if (pinRadius >= distanceBetweenPoints) {
+//                return pin;
+//            }
+//        }
+        return pinList.parallelStream().filter(pin -> {
             double x1 = pin.getCircle().getCenterX();
             double y1 = pin.getCircle().getCenterY();
 
@@ -188,11 +205,8 @@ public class MainController implements Controller {
             double distanceBetweenPoints = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
             double pinRadius = pin.getCircle().getRadius();
 
-            if (pinRadius >= distanceBetweenPoints) {
-                return pin;
-            }
-        }
-        return null;
+            return pinRadius >= distanceBetweenPoints;
+        }).findAny().orElse(null);
     }
 
     private void addPinToMap(Pin pin) {
@@ -203,7 +217,7 @@ public class MainController implements Controller {
     //-------------------- Utility Functions -------------
 
     @FXML
-    protected void resizeImage(ActionEvent actionEvent) {
+    protected void bindImage(ActionEvent actionEvent) {
         //Resize image to fit the window
         DoubleBinding newWidth = outputArea.widthProperty().subtract(0);
         DoubleBinding newHeight = vBox.heightProperty().subtract(hBox.getHeight() + menu.getHeight());

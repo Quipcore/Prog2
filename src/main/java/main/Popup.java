@@ -1,15 +1,9 @@
 package main;
 
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import main.Controllers.Controller;
-import main.Controllers.MainController;
+import main.controllers.Controller;
 
 import java.io.IOException;
 

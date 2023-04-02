@@ -11,7 +11,7 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<VBox fx:id="vBox" xmlns:fx="http://javafx.com/fxml" fx:controller="main.Controllers.MainController">
+<VBox fx:id="vBox" xmlns:fx="http://javafx.com/fxml" fx:controller="main.controllers.MainController">
     <MenuBar fx:id="menu" styleClass="@menuBar.css">
         <Menu text="File" fx:id="menuFile">
             <MenuItem text="New Map" fx:id="menuNewMap" onAction="#onMenuNewMapClick"/>
@@ -24,7 +24,7 @@
 
         <!--Dev menu suppose to be deleted at release and/or at the end of development-->
         <Menu text="Dev" styleClass="devMenu">
-            <MenuItem text="Resize image" onAction="#resizeImage"/>
+            <MenuItem text="Bind image" onAction="#bindImage"/>
             <MenuItem text="Print image size" onAction="#printImageSize"/>
             <MenuItem text="Print window size" onAction="#printWindowSize"/>
         </Menu>
