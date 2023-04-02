@@ -26,8 +26,8 @@ import java.util.Objects;
 public class MainController implements Controller {
 
     private static class Pin /*Might want to extend circle*/ {
-        private static boolean isClicked;
-        private static Circle circle;
+        private boolean isClicked;
+        private final Circle circle;
 
         public Pin(double radius, double xPos, double yPos, boolean b) {
             circle = new Circle();
@@ -39,7 +39,6 @@ public class MainController implements Controller {
 
         private Pin(double xPos, double yPos, boolean b) {
             this(10, xPos, yPos, b);
-
         }
 
         public Pin(double xPos, double yPos) {
@@ -63,7 +62,7 @@ public class MainController implements Controller {
 
     //-------------------- Application fields ------------------
 
-    private List<Pin> pinList = new LinkedList<>();
+    private final List<Pin> pinList = new LinkedList<>();
     private StageManager stageManager;
 
     //-------------------- FXML components ------------------
@@ -186,10 +185,10 @@ public class MainController implements Controller {
             double x2 = mouseEvent.getX();
             double y2 = mouseEvent.getY();
 
-            double distanceBetweenPoints = (y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1);
-            double sq_pinRadius = pin.getCircle().getRadius() * pin.getCircle().getRadius();
+            double distanceBetweenPoints = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+            double pinRadius = pin.getCircle().getRadius();
 
-            if (sq_pinRadius >= distanceBetweenPoints) {
+            if (pinRadius >= distanceBetweenPoints) {
                 return pin;
             }
         }
