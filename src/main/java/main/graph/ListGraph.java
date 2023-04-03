@@ -180,7 +180,7 @@ public class ListGraph<T> implements Graph<T> {
             }
         }
 
-        List<Edge<T>> path = new ArrayList<>();
+        List<Edge<T>> path = new LinkedList<>();
         T current = destination;
 
         try {

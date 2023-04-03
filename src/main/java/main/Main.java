@@ -2,9 +2,10 @@ package main;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import main.controllers.MainController;
+import main.controllers.Controller;
 import main.graph.Edge;
 import main.graph.ListGraph;
 
@@ -22,14 +23,19 @@ public class Main extends Application implements StageManager{
     }
 
     @Override
-    public void createPopup() {
-
+    public void createPopup(String fxml, String name, Controller parentController) throws IOException {
+        Popup popup = new Popup(fxml, name, parentController);
+        popup.display();
     }
 
     @Override
-    public void createPopup(String fxml) throws IOException {
-        Popup popup = new Popup(fxml);
-        popup.display();
+    public void close() {
+        stage.close();
+    }
+
+    @Override
+    public void setCursor(Cursor crosshair) {
+        stage.getScene().setCursor(crosshair);
     }
 
     class Node{
@@ -52,16 +58,17 @@ public class Main extends Application implements StageManager{
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
+
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        MainController mainController = fxmlLoader.getController();
+        Controller mainController = fxmlLoader.getController();
         mainController.setStageManager(this);
+
         this.stage.setTitle("Paths");
         this.stage.setScene(scene);
         this.stage.sizeToScene();
         this.stage.show();
     }
-
 
     public static void main(String[] args) {
         Main main = new Main();
