@@ -23,13 +23,12 @@ import main.Message;
 import main.Popup;
 import main.StageManager;
 import main.graph.Edge;
+import main.graph.Graph;
 import main.graph.ListGraph;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -168,7 +167,11 @@ public class MainController implements Controller {
     @FXML
     protected void onMenuNewMapClick(ActionEvent actionEvent) {
         InputStream mapStream = Objects.requireNonNull(getClass().getResourceAsStream("images/map.PNG"));
-        mapImage = new Image(mapStream);
+        drawMap(new Image(mapStream));
+    }
+
+    private void drawMap(Image mapImage){
+        this.mapImage = mapImage;
         imageView.setImage(mapImage);
         if (stageManager != null) {
             stageManager.resizeStage();
@@ -176,16 +179,34 @@ public class MainController implements Controller {
     }
 
     @FXML
-    protected void onMenuOpenFileClick(ActionEvent actionEvent) {
+    protected void onMenuOpenFileClick(ActionEvent actionEvent) throws IOException {
         //Open and dislay data in selected .graph file
         // 1. Popup window to ask to continue and override unsaved changes
-        // 2. Remove current data
+        // 2. Remove current data§
         // 3. Display .graph data
-
-
-
+//        Path filePath = Path.of("src/main/java/main/graph/saved/.graph");
+//        List<String> fileList = Files.readAllLines(filePath);
+//        String[] pathSplit = fileList.get(0).split(":");
+////        String pathToMap = "/" + pathSplit[1].trim() + ":" +pathSplit[2].trim();
+//        String pathToMap = pathSplit[1].trim();
+//        String[] nodes = fileList.get(1).split(";");
+//
+//        clearMap();
+//        Image image = new Image(pathToMap);
+//        drawMap(image);
+////        drawMap(new FileInputStream(pathToMap));
+////        drawMap(new BufferedInputStream());
+//        for(int i = 0; i < nodes.length - 2; i += 3) {
+//            Pin pin = new Pin(Double.parseDouble(nodes[i + 1]), Double.parseDouble(nodes[i + 2]), nodes[i]);
+//            addPinToMap(pin);
+//        }
 
     }
+
+//    private void clearMap() {
+//        outputArea.getChildren().clear();
+//        graph = new ListGraph<>();
+//    }
 
     @FXML
     protected void onMenuSaveFileClick(ActionEvent actionEvent) throws IOException, URISyntaxException {
@@ -203,22 +224,20 @@ public class MainController implements Controller {
             Files.createFile(filePath);
         }
         String output = "";
-//        output += "file:" + imageView.getImage().getUrl()+ "\n";
-        output += getClass().getResource("images/map.PNG") + "\n";
+//        output += getClass().getResource("images/map.PNG") + "\n";
+
+        output += "file:src/main/resources/main/controllers/images/map.PNG" + "\n";
         output += graph.getNodes().stream()
                                     .map(Pin::fullString)
                                     .collect(Collectors.joining(";")) + "\n";
-//        output += graph.getEdges().stream().map(Edge::toString).collect(Collectors.joining(";")) + "\n";
-        output += graph.getNodes().stream()
-                                    .map(node -> graph.getEdgeFrom(node))
-                                    .map(edges -> edges.stream()
-                                                        .map(Edge::toString)
-                                                        .collect(Collectors.joining(";")))
-                                    .collect(Collectors.joining("\n"));
+        for(Pin node : graph.getNodes()) {
+            for(Edge<Pin> edge : graph.getEdgeFrom(node)) {
+                output += edge.toString() + "\n";
+            }
+        }
 
         Files.writeString(filePath, output);
         try (Stream<String> stream = Files.lines(filePath)) {
-
             stream.forEach(System.out::println);
         }
 
