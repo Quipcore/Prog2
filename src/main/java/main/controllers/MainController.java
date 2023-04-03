@@ -5,9 +5,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -15,18 +15,32 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
+import main.Main;
 import main.Message;
 import main.Popup;
 import main.StageManager;
 import main.graph.Edge;
 import main.graph.ListGraph;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.imageio.ImageIO;
 
 public class MainController implements Controller {
 
@@ -95,6 +109,10 @@ public class MainController implements Controller {
         public String toString() {
             return name;
         }
+
+        public String fullString() {
+            return name + ";" + circle.getCenterX() + ";" + circle.getCenterY();
+        }
     }
 
     //-------------------- Application fields ------------------
@@ -149,8 +167,8 @@ public class MainController implements Controller {
 
     @FXML
     protected void onMenuNewMapClick(ActionEvent actionEvent) {
-        InputStream mapPath = Objects.requireNonNull(getClass().getResourceAsStream("images/map.PNG"));
-        mapImage = new Image(mapPath);
+        InputStream mapStream = Objects.requireNonNull(getClass().getResourceAsStream("images/map.PNG"));
+        mapImage = new Image(mapStream);
         imageView.setImage(mapImage);
         if (stageManager != null) {
             stageManager.resizeStage();
@@ -163,10 +181,14 @@ public class MainController implements Controller {
         // 1. Popup window to ask to continue and override unsaved changes
         // 2. Remove current data
         // 3. Display .graph data
+
+
+
+
     }
 
     @FXML
-    protected void onMenuSaveFileClick(ActionEvent actionEvent) {
+    protected void onMenuSaveFileClick(ActionEvent actionEvent) throws IOException, URISyntaxException {
         /*  Save current display data to .graph file
             1. Create new .graph file or open old file
             2. Write one row with URL to output file [file:URL]
@@ -174,13 +196,50 @@ public class MainController implements Controller {
             4. Create a new row for every connection [fromName;toName;connectionName;connectionWeight]
             5. Close file
          */
+        String resourcePath = "src/main/java/main/graph/saved/";
+        Path filePath = Path.of(resourcePath + ".graph");
+
+        if(!Files.exists(filePath)) {
+            Files.createFile(filePath);
+        }
+        String output = "";
+//        output += "file:" + imageView.getImage().getUrl()+ "\n";
+        output += getClass().getResource("images/map.PNG") + "\n";
+        output += graph.getNodes().stream()
+                                    .map(Pin::fullString)
+                                    .collect(Collectors.joining(";")) + "\n";
+//        output += graph.getEdges().stream().map(Edge::toString).collect(Collectors.joining(";")) + "\n";
+        output += graph.getNodes().stream()
+                                    .map(node -> graph.getEdgeFrom(node))
+                                    .map(edges -> edges.stream()
+                                                        .map(Edge::toString)
+                                                        .collect(Collectors.joining(";")))
+                                    .collect(Collectors.joining("\n"));
+
+        Files.writeString(filePath, output);
+        try (Stream<String> stream = Files.lines(filePath)) {
+
+            stream.forEach(System.out::println);
+        }
+
     }
 
     @FXML
-    protected void onMenuSaveImageClick(ActionEvent actionEvent) {
+    protected void onMenuSaveImageClick(ActionEvent actionEvent) throws IOException {
         /*
         Save screenshot of current windowPane to resource folder with name "capture.PNG"
          */
+//        WritableImage image = vBox.snapshot(new SnapshotParameters(), null);
+//        image.getPixelReader().getPixels(0, 0, (int) image.getWidth(), (int) image.getHeight(), PixelFormat.getByteBgraInstance(), null, 0, (int) image.getWidth() * 4);
+
+        //BufferedImage tempImg = SwingFXUtils.fromFXImage(image, null);
+//        File file = new File("src/main/java/main/graph/saved/capture.PNG");
+//        stageManager.takeScreenshot(file);
+//        ImageIO.write((RenderedImage) image, "PNG", file);
+//        BufferedImage img = SwingFXUtils.fromFXImage(vBox.getScene().snapshot(null), null);
+//        ImageIO.write(img, "png", new File("snapshot.png"));
+
+
     }
 
     @FXML
@@ -195,6 +254,43 @@ public class MainController implements Controller {
 
     @FXML
     protected void onFindPathButtonClick(ActionEvent actionEvent) {
+        List<Pin> pinList = new ArrayList<>(graph.getNodes().parallelStream().filter(pin -> pin.isClicked).toList());
+
+        //If p0 is newer than p1 then swap
+        if (pinList.get(0).getTimestamp() > pinList.get(1).getTimestamp()) {
+            Collections.swap(pinList, 0, 1);
+        }
+
+        Pin p0 = pinList.get(0);
+        Pin p1 = pinList.get(1);
+
+        List<Edge<Pin>> path = graph.getPath(p0,p1);
+        String pathString = "";
+        if(path == null){
+            System.out.println("No path found");
+
+        }else {
+            int accumulatedWeight = 0;
+            for (Edge<Pin> edge: path) {
+                System.out.println(edge);
+                pathString += edge + "\n";
+                accumulatedWeight += edge.getWeight();
+            }
+            System.out.println("Accumulated weight: " + accumulatedWeight);
+            pathString += accumulatedWeight;
+        }
+
+
+
+        Dialog<String> dialog = new TextInputDialog();
+        dialog.setTitle("Name");
+        dialog.setHeaderText("");
+
+        TextArea textArea = new TextArea(pathString);
+        dialog.getDialogPane().setContent(textArea);
+//        dialog.setContentText(pathString);
+        dialog.showAndWait();
+
 
     }
 
@@ -236,7 +332,6 @@ public class MainController implements Controller {
         grid.add(timeField, 1, 1);
 
         dialog.getDialogPane().setContent(grid);
-        dialog.setResultConverter(dialogButton -> new Pair<>(nameField.getText(), timeField.getText()));
         dialog.showAndWait();
     }
 
@@ -280,10 +375,52 @@ public class MainController implements Controller {
         dialog.getDialogPane().setContent(grid);
         dialog.setResultConverter(dialogButton -> new Pair<>(nameField.getText(), timeField.getText()));
         dialog.showAndWait().ifPresent(result -> graph.connect(p0, p1, result.getKey(), Integer.parseInt(result.getValue())));
+
+        Line line = new Line();
+        line.setStartX(p0.getCircle().getCenterX());
+        line.setStartY(p0.getCircle().getCenterY());
+        line.setEndX(p1.getCircle().getCenterX());
+        line.setEndY(p1.getCircle().getCenterY());
+        outputArea.getChildren().add(line);
     }
 
     @FXML
     protected void onChangeConnectionButtonClick(ActionEvent actionEvent) {
+        List<Pin> pinList = new ArrayList<>(graph.getNodes().parallelStream().filter(pin -> pin.isClicked).toList());
+
+        //If p0 is newer than p1 then swap
+        if (pinList.get(0).getTimestamp() > pinList.get(1).getTimestamp()) {
+            Collections.swap(pinList, 0, 1);
+        }
+
+        Pin p0 = pinList.get(0);
+        Pin p1 = pinList.get(1);
+        Edge<Pin> edge = graph.getEdgeBetween(p0,p1);
+
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Connection");
+        dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
+
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField nameField = new TextField();
+        nameField.setText(edge.getName());
+        nameField.setEditable(false);
+        TextField timeField = new TextField();
+
+        grid.add(new Label("Name:"), 0, 0);
+        grid.add(nameField, 1, 0);
+        grid.add(new Label("Time:"), 0, 1);
+        grid.add(timeField, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.setResultConverter(dialogButton -> timeField.getText());
+        dialog.showAndWait().ifPresent(result -> graph.setConnectionWeight(p0, p1, Integer.parseInt(result)));
     }
 
     //-------------------- OutputArea Functions -------------

@@ -32,6 +32,6 @@ public class Edge<T> {
     }
 
     public String toString() {
-        return String.format("From %s, To %s, Weight %d", fromNode, toNode, weight);
+        return String.format("%s;%s;%s;%d", fromNode, toNode,name, weight);
     }
 }
