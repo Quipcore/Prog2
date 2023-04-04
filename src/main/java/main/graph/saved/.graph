@@ -1,6 +1,6 @@
 file:src/main/resources/main/controllers/images/map.PNG
-Luleå;653.0;56.0;Stockholm;529.0;470.0;Oslo;307.0;434.0;Trondheim;293.0;212.0;Åbo;655.0;400.0
-Stockholm;Trondheim;Flight;3
-Stockholm;Åbo;Boat;24
-Trondheim;Stockholm;Flight;3
-Åbo;Stockholm;Boat;24
+D;255.0;406.0;A;346.0;212.0;A;523.0;465.0;B;515.0;118.0
+D;A;E;213
+A;D;E;213
+A;B;C;12
+B;A;C;12

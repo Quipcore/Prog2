@@ -167,9 +167,9 @@ public class MainController implements Controller {
     @FXML
     protected void onMenuNewMapClick(ActionEvent actionEvent) {
         InputStream mapStream = Objects.requireNonNull(getClass().getResourceAsStream("images/map.PNG"));
-        Image image = new Image(mapStream);
+        mapImage = new Image(mapStream);
         outputArea.getChildren().clear();
-        imageView.setImage(image);
+        imageView.setImage(mapImage);
         outputArea.getChildren().add(imageView);
         stageManager.resizeStage();
 //        drawMap(new Image(mapStream));
