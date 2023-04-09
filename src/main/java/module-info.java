@@ -2,6 +2,7 @@ module com.main {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
+    requires junit;
 
     opens main to javafx.fxml;
     exports main;

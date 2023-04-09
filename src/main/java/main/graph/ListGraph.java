@@ -122,7 +122,7 @@ public class ListGraph<T> implements Graph<T> {
         }
 
         Set<Edge<T>> edges = edgeMap.get(node1);
-        if(edges.isEmpty()){
+        if(edges == null){
             return null;
         }
 

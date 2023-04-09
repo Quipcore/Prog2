@@ -12,10 +12,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
+import main.Pin;
 import main.StageManager;
 import main.graph.Edge;
 import main.graph.ListGraph;
@@ -30,80 +29,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MainController implements Controller {
-
-    private static class Pin {
-
-        private static int currentClicked = 0;
-
-        private boolean isClicked;
-
-        private long timestamp;
-        private final Circle circle;
-
-        private final Color offColor = Color.BLUE;
-        private final Color onColor = Color.RED;
-
-        private String name;
-
-        //---------------------------------------------------------------------
-
-        public Pin(double radius, double xPos, double yPos) {
-            circle = new Circle();
-            circle.setRadius(radius);
-            circle.setCenterX(xPos);
-            circle.setCenterY(yPos);
-            circle.setFill(offColor);
-            this.name = "";
-            this.timestamp = Long.MIN_VALUE;
-        }
-
-        public Pin(double xPos, double yPos) {
-            this(10, xPos, yPos);
-        }
-
-        public Pin(double xPos, double yPos, String name) {
-            this(xPos, yPos);
-            this.name = name;
-        }
-
-        //---------------------------------------------------------------------
-
-        public Circle getCircle() {
-            return circle;
-        }
-
-        //---------------------------------------------------------------------
-
-        public void click() {
-            if (isClicked) {
-                if (currentClicked > 0) {
-                    currentClicked--;
-                }
-                isClicked = false;
-                circle.setFill(offColor);
-                timestamp = Long.MIN_VALUE;
-            } else if (!isClicked && currentClicked < 2) {
-                currentClicked++;
-                isClicked = true;
-                circle.setFill(onColor);
-                timestamp = System.nanoTime();
-            }
-        }
-
-        //---------------------------------------------------------------------
-
-        public long getTimestamp() {
-            return timestamp;
-        }
-
-        //---------------------------------------------------------------------
-
-        @Override
-        public String toString() {
-            return name + ";" + circle.getCenterX() + ";" + circle.getCenterY();
-        }
-
-    }
 
     //-------------------- Application fields -----------------------------------------------
     private ListGraph<Pin> graph = new ListGraph<>();
@@ -170,7 +95,11 @@ public class MainController implements Controller {
 
         //Set amount of clicked pins to 0
         if(graph != null) {
-            graph.getNodes().stream().filter(pin -> pin.isClicked).forEach(Pin::click);
+            graph.getNodes().forEach(pin -> {
+                if (pin.isClicked()) {
+                    pin.click();
+                }
+            });
         }
         graph = new ListGraph<>();
     }
@@ -195,6 +124,7 @@ public class MainController implements Controller {
             double xPos = Double.parseDouble(nodes[i + 1]);
             double yPos = Double.parseDouble(nodes[i + 2]);
             String name = nodes[i];
+
             Pin pin = new Pin(xPos, yPos, name);
             addPinToMap(pin);
             pins.add(pin);
@@ -209,9 +139,11 @@ public class MainController implements Controller {
 
             String name = connection[2];
             int weight = Integer.parseInt(connection[3]);
-            try{
+            try {
                 addEdgeToMap(from, to, name, weight);
-            }catch (IllegalStateException e){
+            }catch (NoSuchElementException e){
+                System.out.println("Node not found");
+            } catch (IllegalStateException e){
                 //Expected exception because every connection is added twice
                 System.out.println("Connection already exists");
             }
@@ -250,7 +182,7 @@ public class MainController implements Controller {
         String imageFilePath = "file:src/main/resources/main/controllers/images/map.PNG";
         output.append(imageFilePath).append("\n");
         output.append(graph.getNodes().stream()
-                                        .map(Pin::toString)
+                                        .map(Pin::getLongString)
                                         .collect(Collectors.joining(";")))
                                         .append("\n");
 
@@ -271,25 +203,23 @@ public class MainController implements Controller {
 
     @FXML
     protected void onMenuSaveImageClick() throws IOException {
-        /*
-        Save screenshot of current windowPane to resource folder with name "capture.PNG"
-         */
+
+        // Save screenshot of current windowPane to resource folder with name "capture.PNG"
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     //----------------------------------------------------------------------------------------
 
     @FXML
     protected void onExitButtonClick() {
-        /*
-        Create popup to ask about unsaved changes
-         */
+        // Create popup to ask about unsaved changes
         stageManager.close();
     }
 
     //-------------------- Buttons functions -------------------------------------------------
 
     private Pin[] getSortedClickedPins(){
-        Pin[] pins = graph.getNodes().parallelStream().filter(pin -> pin.isClicked).toArray(Pin[]::new);
+        Pin[] pins = graph.getNodes().parallelStream().filter(Pin::isClicked).toArray(Pin[]::new);
 
         //If p0 is newer than p1 then swap
         if (pins[0].getTimestamp() > pins[1].getTimestamp()) {
@@ -312,28 +242,37 @@ public class MainController implements Controller {
 
         List<Edge<Pin>> path = graph.getPath(p0,p1);
 
-        StringBuilder pathString = new StringBuilder();
         if(path == null){
             System.out.println("No path found");
-
-        }else {
-            int accumulatedWeight = 0;
-            for (Edge<Pin> edge: path) {
-                System.out.println(edge);
-                pathString.append(edge).append("\n");
-                accumulatedWeight += edge.getWeight();
-            }
-            System.out.println("Accumulated weight: " + accumulatedWeight);
-            pathString.append(accumulatedWeight);
+            return;
         }
 
+        StringBuilder pathString = new StringBuilder();
+        int accumulatedWeight = 0;
+        for (Edge<Pin> edge: path) {
+            System.out.println(edge);
+            pathString.append("to ")
+                    .append(edge.getDestination())
+                    .append(" by ")
+                    .append(edge.getName())
+                    .append(" takes ")
+                    .append(edge.getWeight())
+                    .append("\n");
+
+            accumulatedWeight += edge.getWeight();
+        }
+        System.out.println("Accumulated weight: " + accumulatedWeight);
+        pathString.append("Total: ").append(accumulatedWeight);
+
         Dialog<String> dialog = new TextInputDialog();
-        dialog.setTitle("Name");
-        dialog.setHeaderText("");
+        dialog.setTitle("Message");
+        dialog.setHeaderText("The path from " + p0 + " to " + p1);
 
         TextArea textArea = new TextArea(pathString.toString());
+        textArea.setEditable(false);
         dialog.getDialogPane().setContent(textArea);
         dialog.showAndWait();
+
     }
 
     //----------------------------------------------------------------------------------------
@@ -390,7 +329,7 @@ public class MainController implements Controller {
         Pin p0 = pins[0];
         Pin p1 = pins[1];
 
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        Dialog<Pair<String, Integer>> dialog = new Dialog<>();
         dialog.setTitle("Connection");
         dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
 
@@ -411,8 +350,8 @@ public class MainController implements Controller {
         grid.add(timeField, 1, 1);
 
         dialog.getDialogPane().setContent(grid);
-        dialog.setResultConverter(dialogButton -> new Pair<>(nameField.getText(), timeField.getText()));
-        dialog.showAndWait().ifPresent(result -> addEdgeToMap(p0, p1, result.getKey(), Integer.parseInt(result.getValue())));
+        dialog.setResultConverter(dialogButton -> new Pair<>(nameField.getText(), Integer.parseInt(timeField.getText())));
+        dialog.showAndWait().ifPresent(result -> addEdgeToMap(p0, p1, result.getKey(), result.getValue()));
     }
 
     //----------------------------------------------------------------------------------------
