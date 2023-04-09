@@ -1,13 +1,12 @@
 package main.controllers;
 
 import javafx.beans.binding.DoubleBinding;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
-import javafx.scene.image.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -16,33 +15,23 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
-import main.Main;
-import main.Message;
-import main.Popup;
 import main.StageManager;
 import main.graph.Edge;
-import main.graph.Graph;
 import main.graph.ListGraph;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.imageio.ImageIO;
-
 public class MainController implements Controller {
 
+    //Should be record?
     private static class Pin {
 
         private static int currentClicked = 0;
@@ -64,7 +53,7 @@ public class MainController implements Controller {
             circle.setCenterY(yPos);
             circle.setFill(offColor);
             this.name = "";
-            this.timestamp = -1;
+            this.timestamp = Long.MAX_VALUE;
         }
 
         public Pin(double xPos, double yPos) {
@@ -78,10 +67,6 @@ public class MainController implements Controller {
 
         public Circle getCircle() {
             return circle;
-        }
-
-        public boolean isClicked() {
-            return isClicked;
         }
 
         public void click() {
@@ -112,13 +97,16 @@ public class MainController implements Controller {
         public String fullString() {
             return name + ";" + circle.getCenterX() + ";" + circle.getCenterY();
         }
+
+        public void resetClicks() {
+            currentClicked = 0;
+        }
+
     }
 
     //-------------------- Application fields ------------------
     private ListGraph<Pin> graph = new ListGraph<>();
     private StageManager stageManager;
-
-    private Message message = new Message(Message.Status.EMPTY);
 
     //-------------------- FXML components ------------------
 
@@ -165,78 +153,59 @@ public class MainController implements Controller {
     //-------------------- Menu functions ------------------
 
     @FXML
-    protected void onMenuNewMapClick(ActionEvent actionEvent) {
+    protected void onMenuNewMapClick() {
         InputStream mapStream = Objects.requireNonNull(getClass().getResourceAsStream("images/map.PNG"));
         mapImage = new Image(mapStream);
+        createNewMap(mapImage);
+    }
+
+    private void createNewMap(Image mapImage){
         outputArea.getChildren().clear();
         imageView.setImage(mapImage);
         outputArea.getChildren().add(imageView);
         stageManager.resizeStage();
-//        drawMap(new Image(mapStream));
+
+        //Set amount of clicked pins to 0
+        if(graph != null) {
+            graph.getNodes().stream().filter(pin -> pin.isClicked).forEach(Pin::click);
+        }
         graph = new ListGraph<>();
     }
 
-    private void drawMap(Image mapImage){
-        this.mapImage = mapImage;
-        imageView.setImage(mapImage);
-        if (stageManager != null) {
-            stageManager.resizeStage();
-        }
-    }
-
     @FXML
-    protected void onMenuOpenFileClick(ActionEvent actionEvent) throws IOException, InterruptedException {
-        //Open and dislay data in selected .graph file
-        // 1. Popup window to ask to continue and override unsaved changes
-        // 2. Remove current data§
-        // 3. Display .graph data
-//        Path filePath = Path.of("src/main/java/main/graph/saved/.graph");
-//        List<String> fileList = Files.readAllLines(filePath);
-//        String[] pathSplit = fileList.get(0).split(":");
-////        String pathToMap = "/" + pathSplit[1].trim() + ":" +pathSplit[2].trim();
-//        String pathToMap = pathSplit[1].trim();
-//        String[] nodes = fileList.get(1).split(";");
-//
-//        clearMap();
-//        Image image = new Image(pathToMap);
-//        drawMap(image);
-////        drawMap(new FileInputStream(pathToMap));
-////        drawMap(new BufferedInputStream());
-//        for(int i = 0; i < nodes.length - 2; i += 3) {
-//            Pin pin = new Pin(Double.parseDouble(nodes[i + 1]), Double.parseDouble(nodes[i + 2]), nodes[i]);
-//            addPinToMap(pin);
-//        }
-
-//        clearMap();
-
+    protected void onMenuOpenFileClick() throws IOException {
+        //Get list of all line in file
         Path mapFilePath = Path.of("src/main/java/main/graph/saved/.graph");
-        List<String> fileList = Files.readAllLines(mapFilePath);
+        List<String> lines = Files.readAllLines(mapFilePath);
 
-        String[] pathSplit = fileList.get(0).split(":");
+        //Get image and set image
+        String[] pathSplit = lines.get(0).split(":");
         mapImage = new Image(new FileInputStream(pathSplit[1].trim()));
-        imageView.setImage(mapImage);
-        stageManager.resizeStage();
+        createNewMap(mapImage);
 
+        //Get pins and add them to map
         List<Pin> pins = new ArrayList<>();
-        String[] nodes = fileList.get(1).split(";");
+        String[] nodes = lines.get(1).split(";");
         for(int i = 0; i < nodes.length - 2; i += 3) {
-            Pin pin = new Pin(Double.parseDouble(nodes[i + 1]), Double.parseDouble(nodes[i + 2]), nodes[i]);
+            double xPos = Double.parseDouble(nodes[i + 1]);
+            double yPos = Double.parseDouble(nodes[i + 2]);
+            String name = nodes[i];
+            Pin pin = new Pin(xPos, yPos, name);
             addPinToMap(pin);
             pins.add(pin);
         }
 
-        for(int i = 2; i < fileList.size();i++){
-            String[] connection = fileList.get(i).split(";");
-            Pin from = pins.stream().filter(pin -> pin.toString().equals(connection[0])).findFirst().get();
-            Pin to = pins.stream().filter(pin -> pin.toString().equals(connection[1])).findFirst().get();
+        //Get connections and add them to map
+        for(int i = 2; i < lines.size();i++){
+            String[] connection = lines.get(i).split(";");
+
+            Pin from = getPin(pins, connection[0]);
+            Pin to = getPin(pins, connection[1]);
+
             String name = connection[2];
             int weight = Integer.parseInt(connection[3]);
             try{
                 addEdgeToMap(from, to, name, weight);
-            }catch (IllegalArgumentException e){
-                System.out.println("Weight must be a positive integer");
-            }catch (NoSuchElementException e){
-                System.out.println("Node does not exist");
             }catch (IllegalStateException e){
                 //Expected exception because every connection is added twice
                 System.out.println("Connection already exists");
@@ -245,21 +214,15 @@ public class MainController implements Controller {
 
     }
 
-    private void clearMap() {
-//        outputArea.getChildren().clear();
-        outputArea.getChildren().forEach(System.out::println);
-
-        outputArea.getChildren().clear();
-        imageView.setImage(null);
-        outputArea.getChildren().add(imageView);
-        stageManager.resizeStage();
-        outputArea.getChildren().forEach(System.out::println);
-
-        graph = new ListGraph<>();
+    private static Pin getPin(List<Pin> pins, String connection) {
+        return pins.stream()
+                    .filter(pin -> pin.toString().equals(connection))
+                    .findFirst()
+                    .orElse(null);
     }
 
     @FXML
-    protected void onMenuSaveFileClick(ActionEvent actionEvent) throws IOException, URISyntaxException {
+    protected void onMenuSaveFileClick() throws IOException {
         /*  Save current display data to .graph file
             1. Create new .graph file or open old file
             2. Write one row with URL to output file [file:URL]
@@ -273,20 +236,20 @@ public class MainController implements Controller {
         if(!Files.exists(filePath)) {
             Files.createFile(filePath);
         }
-        String output = "";
+        StringBuilder output = new StringBuilder();
 //        output += getClass().getResource("images/map.PNG") + "\n";
 
-        output += "file:src/main/resources/main/controllers/images/map.PNG" + "\n";
-        output += graph.getNodes().stream()
-                                    .map(Pin::fullString)
-                                    .collect(Collectors.joining(";")) + "\n";
+        output.append("file:src/main/resources/main/controllers/images/map.PNG" + "\n");
+        output.append(graph.getNodes().stream()
+                                        .map(Pin::fullString)
+                                        .collect(Collectors.joining(";"))).append("\n");
         for(Pin node : graph.getNodes()) {
             for(Edge<Pin> edge : graph.getEdgeFrom(node)) {
-                output += edge.toString() + "\n";
+                output.append(edge.toString()).append("\n");
             }
         }
 
-        Files.writeString(filePath, output);
+        Files.writeString(filePath, output.toString());
         try (Stream<String> stream = Files.lines(filePath)) {
             stream.forEach(System.out::println);
         }
@@ -294,47 +257,44 @@ public class MainController implements Controller {
     }
 
     @FXML
-    protected void onMenuSaveImageClick(ActionEvent actionEvent) throws IOException {
+    protected void onMenuSaveImageClick() throws IOException {
         /*
         Save screenshot of current windowPane to resource folder with name "capture.PNG"
          */
-//        WritableImage image = vBox.snapshot(new SnapshotParameters(), null);
-//        image.getPixelReader().getPixels(0, 0, (int) image.getWidth(), (int) image.getHeight(), PixelFormat.getByteBgraInstance(), null, 0, (int) image.getWidth() * 4);
-
-        //BufferedImage tempImg = SwingFXUtils.fromFXImage(image, null);
-//        File file = new File("src/main/java/main/graph/saved/capture.PNG");
-//        stageManager.takeScreenshot(file);
-//        ImageIO.write((RenderedImage) image, "PNG", file);
-//        BufferedImage img = SwingFXUtils.fromFXImage(vBox.getScene().snapshot(null), null);
-//        ImageIO.write(img, "png", new File("snapshot.png"));
-
-
     }
 
     @FXML
-    protected void onExitButtonClick(ActionEvent actionEvent) {
+    protected void onExitButtonClick() {
         /*
         Create popup to ask about unsaved changes
          */
-        System.exit(0);
+        stageManager.close();
     }
 
     //-------------------- Buttons functions ---------------
 
-    @FXML
-    protected void onFindPathButtonClick(ActionEvent actionEvent) {
-        List<Pin> pinList = new ArrayList<>(graph.getNodes().parallelStream().filter(pin -> pin.isClicked).toList());
+    private Pin[] getSortedClickedPins(){
+        Pin[] pins = graph.getNodes().parallelStream().filter(pin -> pin.isClicked).toArray(Pin[]::new);
 
         //If p0 is newer than p1 then swap
-        if (pinList.get(0).getTimestamp() > pinList.get(1).getTimestamp()) {
-            Collections.swap(pinList, 0, 1);
+        if (pins[0].getTimestamp() > pins[1].getTimestamp()) {
+            Pin temp = pins[0];
+            pins[0] = pins[1];
+            pins[1] = temp;
+            return pins;
         }
 
-        Pin p0 = pinList.get(0);
-        Pin p1 = pinList.get(1);
+        return pins;
+    }
+
+    @FXML
+    protected void onFindPathButtonClick() {
+        Pin[] pins = getSortedClickedPins();
+        Pin p0 = pins[0];
+        Pin p1 = pins[1];
 
         List<Edge<Pin>> path = graph.getPath(p0,p1);
-        String pathString = "";
+        StringBuilder pathString = new StringBuilder();
         if(path == null){
             System.out.println("No path found");
 
@@ -342,38 +302,28 @@ public class MainController implements Controller {
             int accumulatedWeight = 0;
             for (Edge<Pin> edge: path) {
                 System.out.println(edge);
-                pathString += edge + "\n";
+                pathString.append(edge).append("\n");
                 accumulatedWeight += edge.getWeight();
             }
             System.out.println("Accumulated weight: " + accumulatedWeight);
-            pathString += accumulatedWeight;
+            pathString.append(accumulatedWeight);
         }
-
-
 
         Dialog<String> dialog = new TextInputDialog();
         dialog.setTitle("Name");
         dialog.setHeaderText("");
 
-        TextArea textArea = new TextArea(pathString);
+        TextArea textArea = new TextArea(pathString.toString());
         dialog.getDialogPane().setContent(textArea);
-//        dialog.setContentText(pathString);
         dialog.showAndWait();
-
-
     }
 
     @FXML
-    protected void onShowConnectionButtonClick(ActionEvent actionEvent) {
-        List<Pin> pinList = new ArrayList<>(graph.getNodes().parallelStream().filter(pin -> pin.isClicked).toList());
+    protected void onShowConnectionButtonClick() {
+        Pin[] pins = getSortedClickedPins();
+        Pin p0 = pins[0];
+        Pin p1 = pins[1];
 
-        //If p0 is newer than p1 then swap
-        if (pinList.get(0).getTimestamp() > pinList.get(1).getTimestamp()) {
-            Collections.swap(pinList, 0, 1);
-        }
-
-        Pin p0 = pinList.get(0);
-        Pin p1 = pinList.get(1);
         Edge<Pin> edge = graph.getEdgeBetween(p0,p1);
 
         Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -405,22 +355,16 @@ public class MainController implements Controller {
     }
 
     @FXML
-    protected void onNewPlaceButtonClick(ActionEvent actionEvent) throws IOException {
+    protected void onNewPlaceButtonClick() {
         stageManager.setCursor(Cursor.CROSSHAIR);
         btnNewPlace.setDisable(true);
     }
 
     @FXML
-    protected void onNewConnectionButtonClick(ActionEvent actionEvent) throws IOException {
-        List<Pin> pinList = new ArrayList<>(graph.getNodes().parallelStream().filter(pin -> pin.isClicked).toList());
-
-        //If p0 is newer than p1 then swap
-        if (pinList.get(0).getTimestamp() > pinList.get(1).getTimestamp()) {
-            Collections.swap(pinList, 0, 1);
-        }
-
-        Pin p0 = pinList.get(0);
-        Pin p1 = pinList.get(1);
+    protected void onNewConnectionButtonClick() {
+        Pin[] pins = getSortedClickedPins();
+        Pin p0 = pins[0];
+        Pin p1 = pins[1];
 
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Connection");
@@ -438,6 +382,7 @@ public class MainController implements Controller {
 
         grid.add(new Label("Name:"), 0, 0);
         grid.add(nameField, 1, 0);
+
         grid.add(new Label("Time:"), 0, 1);
         grid.add(timeField, 1, 1);
 
@@ -447,16 +392,11 @@ public class MainController implements Controller {
     }
 
     @FXML
-    protected void onChangeConnectionButtonClick(ActionEvent actionEvent) {
-        List<Pin> pinList = new ArrayList<>(graph.getNodes().parallelStream().filter(pin -> pin.isClicked).toList());
+    protected void onChangeConnectionButtonClick() {
+        Pin[] pins = getSortedClickedPins();
+        Pin p0 = pins[0];
+        Pin p1 = pins[1];
 
-        //If p0 is newer than p1 then swap
-        if (pinList.get(0).getTimestamp() > pinList.get(1).getTimestamp()) {
-            Collections.swap(pinList, 0, 1);
-        }
-
-        Pin p0 = pinList.get(0);
-        Pin p1 = pinList.get(1);
         Edge<Pin> edge = graph.getEdgeBetween(p0,p1);
 
         Dialog<String> dialog = new Dialog<>();
@@ -488,7 +428,7 @@ public class MainController implements Controller {
     //-------------------- OutputArea Functions -------------
 
     @FXML
-    protected void onOutPutAreaMouseClicked(MouseEvent mouseEvent) throws IOException {
+    protected void onOutPutAreaMouseClicked(MouseEvent mouseEvent) {
         if (mouseEvent.getX() > mapImage.getWidth() || mouseEvent.getY() > mapImage.getHeight()) {
             return;
         }
@@ -513,20 +453,6 @@ public class MainController implements Controller {
     }
 
     private Pin getPinOnMousePos(MouseEvent mouseEvent) {
-//        for (Pin pin : pinList) {
-//            double x1 = pin.getCircle().getCenterX();
-//            double y1 = pin.getCircle().getCenterY();
-//
-//            double x2 = mouseEvent.getX();
-//            double y2 = mouseEvent.getY();
-//
-//            double distanceBetweenPoints = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
-//            double pinRadius = pin.getCircle().getRadius();
-//
-//            if (pinRadius >= distanceBetweenPoints) {
-//                return pin;
-//            }
-//        }
         return graph.getNodes().parallelStream().filter(pin -> {
             double x1 = pin.getCircle().getCenterX();
             double y1 = pin.getCircle().getCenterY();
@@ -535,9 +461,8 @@ public class MainController implements Controller {
             double y2 = mouseEvent.getY();
 
             double distanceBetweenPoints = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
-            double pinRadius = pin.getCircle().getRadius();
 
-            return pinRadius >= distanceBetweenPoints;
+            return pin.getCircle().getRadius() >= distanceBetweenPoints;
         }).findAny().orElse(null);
     }
 
@@ -546,7 +471,7 @@ public class MainController implements Controller {
         graph.add(pin);
     }
 
-    private void addEdgeToMap(Pin p0, Pin p1,String name, int weight) {
+    private void addEdgeToMap(Pin p0, Pin p1, String name, int weight) {
         graph.connect(p0, p1, name, weight);
 
         Line line = new Line();
@@ -557,10 +482,10 @@ public class MainController implements Controller {
         outputArea.getChildren().add(line);
     }
 
-    //-------------------- Utility Functions -------------
+    //-------------------- Developer Functions -------------
 
     @FXML
-    protected void bindImage(ActionEvent actionEvent) {
+    protected void bindImage() {
         //Resize image to fit the window
         DoubleBinding newWidth = outputArea.widthProperty().subtract(0);
         DoubleBinding newHeight = vBox.heightProperty().subtract(hBox.getHeight() + menu.getHeight());
@@ -570,12 +495,12 @@ public class MainController implements Controller {
     }
 
     @FXML
-    protected void printImageSize(ActionEvent actionEvent) {
+    protected void printImageSize() {
         System.out.println("Image size: " + imageView.getFitWidth() + ", " + imageView.getFitHeight());
     }
 
     @FXML
-    protected void printWindowSize(ActionEvent actionEvent) {
+    protected void printWindowSize() {
         System.out.println("Window size: " + vBox.getWidth() + ", " + vBox.getHeight());
     }
 
@@ -594,14 +519,5 @@ public class MainController implements Controller {
     @Override
     public void setParentController(Controller parentController) {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void send(Message message) {
-        this.message = message;
-        message.status = Message.Status.RECIVED;
-
-        String messageText = message.get();
-        System.out.println(messageText);
     }
 }
