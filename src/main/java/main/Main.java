@@ -32,7 +32,7 @@ public class Main extends Application implements StageManager{
         stage.getScene().setCursor(cursor);
     }
 
-    class Node{
+    static class Node{
         private final int id;
 
         public Node(int id){
