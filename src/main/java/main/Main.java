@@ -39,10 +39,6 @@ public class Main extends Application implements StageManager{
             this.id = id;
         }
 
-        public int getID(){
-            return id;
-        }
-
         @Override
         public String toString() {
             return String.valueOf(id);
