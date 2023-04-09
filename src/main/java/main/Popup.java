@@ -97,4 +97,15 @@ public class Popup {
         dialog.setContentText("Name of place:");
         return dialog.showAndWait().orElse(null);
     }
+
+    public static void findPath(Pin p0, Pin p1, String path){
+        Dialog<String> dialog = new TextInputDialog();
+        dialog.setTitle("Message");
+        dialog.setHeaderText("The path from " + p0 + " to " + p1);
+
+        TextArea textArea = new TextArea(path);
+        textArea.setEditable(false);
+        dialog.getDialogPane().setContent(textArea);
+        dialog.showAndWait();
+    }
 }
