@@ -122,8 +122,9 @@ public class ListGraph<T> implements Graph<T> {
         }
 
         Set<Edge<T>> edges = edgeMap.get(node1);
-//        if (edges == null)
-//            return null;
+        if(edges.isEmpty()){
+            return null;
+        }
 
         for(Edge<T> edge : edges){
             if(edge.getDestination().equals(node2)){
