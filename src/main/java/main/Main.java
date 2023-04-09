@@ -23,11 +23,6 @@ public class Main extends Application implements StageManager{
         this.stage.sizeToScene();
     }
 
-    @Override
-    public void createPopup(String fxml, String name, Controller parentController) throws IOException {
-        Popup popup = new Popup(fxml, name, parentController);
-        popup.display();
-    }
 
     @Override
     public void close() {
@@ -87,6 +82,7 @@ public class Main extends Application implements StageManager{
             nodeList.add(new Node(i));
             graph.add(nodeList.get(i));
         }
+
 
         graph.connect(nodeList.get(0), nodeList.get(1), "Edge 1", 1);
         graph.connect(nodeList.get(1), nodeList.get(2), "Edge 2", 2);

@@ -11,7 +11,5 @@ public interface StageManager {
 
     void setCursor(Cursor crosshair);
 
-    void createPopup(String s, String name, Controller mainController) throws IOException;
-
     void close();
 }
