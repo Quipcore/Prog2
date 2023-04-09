@@ -191,6 +191,7 @@ public class ListGraph<T> implements Graph<T> {
                 current = previous.get(current);
             }
         } catch (NoSuchElementException e) {
+            //if returned path is null, there is no path between the two nodes
             return null;
         }
 
