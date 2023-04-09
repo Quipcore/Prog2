@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 public class ListGraph<T> implements Graph<T> {
 
-    private HashMap<T,Set<Edge<T>>> edgeMap = new HashMap<>();
+    private Map<T,Set<Edge<T>>> edgeMap = new HashMap<>();
     private Set<T> nodes = new HashSet<>();
 
     //------------------------------------------------------------------------------------------------------------------
