@@ -45,6 +45,8 @@ public class MainController implements Controller {
 
         private String name;
 
+        //---------------------------------------------------------------------
+
         public Pin(double radius, double xPos, double yPos) {
             circle = new Circle();
             circle.setRadius(radius);
@@ -64,9 +66,13 @@ public class MainController implements Controller {
             this.name = name;
         }
 
+        //---------------------------------------------------------------------
+
         public Circle getCircle() {
             return circle;
         }
+
+        //---------------------------------------------------------------------
 
         public void click() {
             if (isClicked) {
@@ -84,9 +90,13 @@ public class MainController implements Controller {
             }
         }
 
+        //---------------------------------------------------------------------
+
         public long getTimestamp() {
             return timestamp;
         }
+
+        //---------------------------------------------------------------------
 
         @Override
         public String toString() {
@@ -95,11 +105,11 @@ public class MainController implements Controller {
 
     }
 
-    //-------------------- Application fields ------------------
+    //-------------------- Application fields -----------------------------------------------
     private ListGraph<Pin> graph = new ListGraph<>();
     private StageManager stageManager;
 
-    //-------------------- FXML components ------------------
+    //-------------------- FXML components --------------------------------------------------
 
     @FXML
     private Pane windowPane;
@@ -141,7 +151,7 @@ public class MainController implements Controller {
     @FXML
     private Image mapImage;
 
-    //-------------------- Menu functions ------------------
+    //-------------------- Menu functions -----------------------------------------------
 
     @FXML
     protected void onMenuNewMapClick() {
@@ -149,6 +159,8 @@ public class MainController implements Controller {
         mapImage = new Image(mapStream);
         createNewMap(mapImage);
     }
+
+    //----------------------------------------------------------------------------------------
 
     private void createNewMap(Image mapImage){
         outputArea.getChildren().clear();
@@ -162,6 +174,8 @@ public class MainController implements Controller {
         }
         graph = new ListGraph<>();
     }
+
+    //----------------------------------------------------------------------------------------
 
     @FXML
     protected void onMenuOpenFileClick() throws IOException {
@@ -205,12 +219,16 @@ public class MainController implements Controller {
 
     }
 
+    //----------------------------------------------------------------------------------------
+
     private static Pin getPin(List<Pin> pins, String connection) {
         return pins.stream()
                     .filter(pin -> pin.toString().equals(connection))
                     .findFirst()
                     .orElse(null);
     }
+
+    //----------------------------------------------------------------------------------------
 
     @FXML
     protected void onMenuSaveFileClick() throws IOException {
@@ -249,12 +267,16 @@ public class MainController implements Controller {
 
     }
 
+    //----------------------------------------------------------------------------------------
+
     @FXML
     protected void onMenuSaveImageClick() throws IOException {
         /*
         Save screenshot of current windowPane to resource folder with name "capture.PNG"
          */
     }
+
+    //----------------------------------------------------------------------------------------
 
     @FXML
     protected void onExitButtonClick() {
@@ -264,7 +286,7 @@ public class MainController implements Controller {
         stageManager.close();
     }
 
-    //-------------------- Buttons functions ---------------
+    //-------------------- Buttons functions -------------------------------------------------
 
     private Pin[] getSortedClickedPins(){
         Pin[] pins = graph.getNodes().parallelStream().filter(pin -> pin.isClicked).toArray(Pin[]::new);
@@ -279,6 +301,8 @@ public class MainController implements Controller {
 
         return pins;
     }
+
+    //----------------------------------------------------------------------------------------
 
     @FXML
     protected void onFindPathButtonClick() {
@@ -311,6 +335,8 @@ public class MainController implements Controller {
         dialog.getDialogPane().setContent(textArea);
         dialog.showAndWait();
     }
+
+    //----------------------------------------------------------------------------------------
 
     @FXML
     protected void onShowConnectionButtonClick() {
@@ -348,11 +374,15 @@ public class MainController implements Controller {
         dialog.showAndWait();
     }
 
+    //----------------------------------------------------------------------------------------
+
     @FXML
     protected void onNewPlaceButtonClick() {
         stageManager.setCursor(Cursor.CROSSHAIR);
         btnNewPlace.setDisable(true);
     }
+
+    //----------------------------------------------------------------------------------------
 
     @FXML
     protected void onNewConnectionButtonClick() {
@@ -384,6 +414,8 @@ public class MainController implements Controller {
         dialog.setResultConverter(dialogButton -> new Pair<>(nameField.getText(), timeField.getText()));
         dialog.showAndWait().ifPresent(result -> addEdgeToMap(p0, p1, result.getKey(), Integer.parseInt(result.getValue())));
     }
+
+    //----------------------------------------------------------------------------------------
 
     @FXML
     protected void onChangeConnectionButtonClick() {
@@ -419,7 +451,7 @@ public class MainController implements Controller {
         dialog.showAndWait().ifPresent(result -> graph.setConnectionWeight(p0, p1, Integer.parseInt(result)));
     }
 
-    //-------------------- OutputArea Functions -------------
+    //-------------------- OutputArea Functions -----------------------------------------------
 
     @FXML
     protected void onOutPutAreaMouseClicked(MouseEvent mouseEvent) {
@@ -446,6 +478,8 @@ public class MainController implements Controller {
         }
     }
 
+    //----------------------------------------------------------------------------------------
+
     private Pin getPinOnMousePos(MouseEvent mouseEvent) {
         return graph.getNodes().parallelStream().filter(pin -> {
             double x1 = pin.getCircle().getCenterX();
@@ -460,10 +494,14 @@ public class MainController implements Controller {
         }).findAny().orElse(null);
     }
 
+    //----------------------------------------------------------------------------------------
+
     private void addPinToMap(Pin pin) {
         outputArea.getChildren().add(pin.getCircle());
         graph.add(pin);
     }
+
+    //----------------------------------------------------------------------------------------
 
     private void addEdgeToMap(Pin p0, Pin p1, String name, int weight) {
         graph.connect(p0, p1, name, weight);
@@ -476,7 +514,7 @@ public class MainController implements Controller {
         outputArea.getChildren().add(line);
     }
 
-    //-------------------- Developer Functions -------------
+    //-------------------- Developer Functions -----------------------------------------------
 
     @FXML
     protected void bindImage() {
@@ -487,22 +525,27 @@ public class MainController implements Controller {
         imageView.fitHeightProperty().bind(newHeight);
     }
 
+    //----------------------------------------------------------------------------------------
+
     @FXML
     protected void printImageSize() {
         System.out.println("Image size: " + imageView.getFitWidth() + ", " + imageView.getFitHeight());
     }
+
+    //----------------------------------------------------------------------------------------
 
     @FXML
     protected void printWindowSize() {
         System.out.println("Window size: " + vBox.getWidth() + ", " + vBox.getHeight());
     }
 
-
-    //-------------------- Init Functions ---------------------
+    //-------------------- Init Functions ----------------------------------------------------
 
     public void initialize(StageManager manager) {
         setStageManager(manager);
     }
+
+    //----------------------------------------------------------------------------------------
 
     public void setStageManager(StageManager manager) {
         this.stageManager = manager;
