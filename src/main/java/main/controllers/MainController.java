@@ -31,7 +31,6 @@ import java.util.stream.Stream;
 
 public class MainController implements Controller {
 
-    //Should be record?
     private static class Pin {
 
         private static int currentClicked = 0;
@@ -53,7 +52,7 @@ public class MainController implements Controller {
             circle.setCenterY(yPos);
             circle.setFill(offColor);
             this.name = "";
-            this.timestamp = Long.MAX_VALUE;
+            this.timestamp = Long.MIN_VALUE;
         }
 
         public Pin(double xPos, double yPos) {
@@ -76,7 +75,7 @@ public class MainController implements Controller {
                 }
                 isClicked = false;
                 circle.setFill(offColor);
-                timestamp = -1;
+                timestamp = Long.MIN_VALUE;
             } else if (!isClicked && currentClicked < 2) {
                 currentClicked++;
                 isClicked = true;
@@ -91,15 +90,7 @@ public class MainController implements Controller {
 
         @Override
         public String toString() {
-            return name;
-        }
-
-        public String fullString() {
             return name + ";" + circle.getCenterX() + ";" + circle.getCenterY();
-        }
-
-        public void resetClicks() {
-            currentClicked = 0;
         }
 
     }
@@ -176,16 +167,16 @@ public class MainController implements Controller {
     protected void onMenuOpenFileClick() throws IOException {
         //Get list of all line in file
         Path mapFilePath = Path.of("src/main/java/main/graph/saved/.graph");
-        List<String> lines = Files.readAllLines(mapFilePath);
+        String[] lines = Files.readAllLines(mapFilePath).toArray(new String[0]);
 
         //Get image and set image
-        String[] pathSplit = lines.get(0).split(":");
+        String[] pathSplit = lines[0].split(":");
         mapImage = new Image(new FileInputStream(pathSplit[1].trim()));
         createNewMap(mapImage);
 
         //Get pins and add them to map
         List<Pin> pins = new ArrayList<>();
-        String[] nodes = lines.get(1).split(";");
+        String[] nodes = lines[1].split(";");
         for(int i = 0; i < nodes.length - 2; i += 3) {
             double xPos = Double.parseDouble(nodes[i + 1]);
             double yPos = Double.parseDouble(nodes[i + 2]);
@@ -196,8 +187,8 @@ public class MainController implements Controller {
         }
 
         //Get connections and add them to map
-        for(int i = 2; i < lines.size();i++){
-            String[] connection = lines.get(i).split(";");
+        for(int i = 2; i < lines.length;i++){
+            String[] connection = lines[i].split(";");
 
             Pin from = getPin(pins, connection[0]);
             Pin to = getPin(pins, connection[1]);
@@ -236,13 +227,15 @@ public class MainController implements Controller {
         if(!Files.exists(filePath)) {
             Files.createFile(filePath);
         }
-        StringBuilder output = new StringBuilder();
-//        output += getClass().getResource("images/map.PNG") + "\n";
 
-        output.append("file:src/main/resources/main/controllers/images/map.PNG" + "\n");
+        StringBuilder output = new StringBuilder();
+        String imageFilePath = "file:src/main/resources/main/controllers/images/map.PNG";
+        output.append(imageFilePath).append("\n");
         output.append(graph.getNodes().stream()
-                                        .map(Pin::fullString)
-                                        .collect(Collectors.joining(";"))).append("\n");
+                                        .map(Pin::toString)
+                                        .collect(Collectors.joining(";")))
+                                        .append("\n");
+
         for(Pin node : graph.getNodes()) {
             for(Edge<Pin> edge : graph.getEdgeFrom(node)) {
                 output.append(edge.toString()).append("\n");
@@ -294,6 +287,7 @@ public class MainController implements Controller {
         Pin p1 = pins[1];
 
         List<Edge<Pin>> path = graph.getPath(p0,p1);
+
         StringBuilder pathString = new StringBuilder();
         if(path == null){
             System.out.println("No path found");
@@ -489,7 +483,6 @@ public class MainController implements Controller {
         //Resize image to fit the window
         DoubleBinding newWidth = outputArea.widthProperty().subtract(0);
         DoubleBinding newHeight = vBox.heightProperty().subtract(hBox.getHeight() + menu.getHeight());
-        //newHeight = pane.heightProperty().subtract(0);
         imageView.fitWidthProperty().bind(newWidth);
         imageView.fitHeightProperty().bind(newHeight);
     }
@@ -507,17 +500,11 @@ public class MainController implements Controller {
 
     //-------------------- Init Functions ---------------------
 
-    public void initialize(StageManager manager, Controller parentController) {
+    public void initialize(StageManager manager) {
         setStageManager(manager);
-        setParentController(parentController);
     }
 
     public void setStageManager(StageManager manager) {
         this.stageManager = manager;
-    }
-
-    @Override
-    public void setParentController(Controller parentController) {
-        throw new UnsupportedOperationException();
     }
 }

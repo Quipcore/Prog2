@@ -9,8 +9,6 @@ import main.controllers.Controller;
 import main.graph.Edge;
 import main.graph.ListGraph;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +28,8 @@ public class Main extends Application implements StageManager{
     }
 
     @Override
-    public void setCursor(Cursor crosshair) {
-        stage.getScene().setCursor(crosshair);
+    public void setCursor(Cursor cursor) {
+        stage.getScene().setCursor(cursor);
     }
 
     class Node{
@@ -84,15 +82,25 @@ public class Main extends Application implements StageManager{
         }
 
 
-        graph.connect(nodeList.get(0), nodeList.get(1), "Edge 1", 1);
-        graph.connect(nodeList.get(1), nodeList.get(2), "Edge 2", 2);
-        graph.connect(nodeList.get(2), nodeList.get(3), "Edge 3", 1);
-        graph.connect(nodeList.get(2), nodeList.get(4), "Edge 4", 1);
+        graph.connect(nodeList.get(0), nodeList.get(1), "Edge A", 1);
+        graph.connect(nodeList.get(1), nodeList.get(2), "Edge B", 2);
+        graph.connect(nodeList.get(2), nodeList.get(3), "Edge C", 1);
+        graph.connect(nodeList.get(2), nodeList.get(4), "Edge D", 1);
 
-        graph.connect(nodeList.get(5), nodeList.get(5), "Edge 5", 1);
-        graph.connect(nodeList.get(5), nodeList.get(6), "Edge 6", 1);
+        graph.connect(nodeList.get(5), nodeList.get(5), "Edge E", 1);
+        graph.connect(nodeList.get(5), nodeList.get(6), "Edge F", 1);
 
-        graph.connect(nodeList.get(0), nodeList.get(4), "Edge 7", 1);
+        graph.connect(nodeList.get(0), nodeList.get(4), "Edge G", 1);
+
+        graph.disconnect(nodeList.get(0), nodeList.get(4));
+        graph.connect(nodeList.get(0), nodeList.get(4), "Edge H", 1);
+
+        nodeList.add(new Node(7));
+        graph.add(nodeList.get(7));
+        graph.remove(nodeList.get(7));
+
+        System.out.println(graph);
+        System.out.println(graph.pathExists(nodeList.get(0), nodeList.get(2)));
 
         /*
 

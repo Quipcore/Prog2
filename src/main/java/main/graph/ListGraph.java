@@ -17,7 +17,7 @@ public class ListGraph<T> implements Graph<T> {
     //------------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void remove(T node) {
+    public void remove(T node) throws NoSuchElementException{
         if (!nodes.remove(node)) {
             throw new NoSuchElementException();
         }
@@ -101,6 +101,8 @@ public class ListGraph<T> implements Graph<T> {
         return new HashSet<>(nodes);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     @Override
     public Set<Edge<T>> getEdgeFrom(T node) throws NoSuchElementException {
         if (!nodes.contains(node)) {
@@ -120,8 +122,8 @@ public class ListGraph<T> implements Graph<T> {
         }
 
         Set<Edge<T>> edges = edgeMap.get(node1);
-        if (edges == null)
-            return null;
+//        if (edges == null)
+//            return null;
 
         for(Edge<T> edge : edges){
             if(edge.getDestination().equals(node2)){
@@ -191,7 +193,23 @@ public class ListGraph<T> implements Graph<T> {
         } catch (NoSuchElementException e) {
             return null;
         }
+
         Collections.reverse(path);
         return path;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (T node : nodes) {
+            for (Edge<T> edge : getEdgeFrom(node)) {
+                sb.append(node).append(" -> ");
+                sb.append(edge.getName()).append(" -> ");
+                sb.append(edge.getDestination()).append("\n");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }
