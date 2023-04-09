@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
 import main.Pin;
+import main.Popup;
 import main.StageManager;
 import main.graph.Edge;
 import main.graph.ListGraph;
@@ -285,32 +286,33 @@ public class MainController implements Controller {
 
         Edge<Pin> edge = graph.getEdgeBetween(p0,p1);
 
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Connection");
-        dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
-
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-
-        TextField nameField = new TextField();
-        nameField.setText(edge.getName());
-        nameField.setEditable(false);
-
-        TextField timeField = new TextField();
-        timeField.setText(String.valueOf(edge.getWeight()));
-        timeField.setEditable(false);
-
-        grid.add(new Label("Name:"), 0, 0);
-        grid.add(nameField, 1, 0);
-        grid.add(new Label("Time:"), 0, 1);
-        grid.add(timeField, 1, 1);
-
-        dialog.getDialogPane().setContent(grid);
-        dialog.showAndWait();
+//        Dialog<Pair<String, String>> dialog = new Dialog<>();
+//        dialog.setTitle("Connection");
+//        dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
+//
+//        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+//
+//        GridPane grid = new GridPane();
+//        grid.setHgap(10);
+//        grid.setVgap(10);
+//        grid.setPadding(new Insets(20, 150, 10, 10));
+//
+//        TextField nameField = new TextField();
+//        nameField.setText(edge.getName());
+//        nameField.setEditable(false);
+//
+//        TextField timeField = new TextField();
+//        timeField.setText(String.valueOf(edge.getWeight()));
+//        timeField.setEditable(false);
+//
+//        grid.add(new Label("Name:"), 0, 0);
+//        grid.add(nameField, 1, 0);
+//        grid.add(new Label("Time:"), 0, 1);
+//        grid.add(timeField, 1, 1);
+//
+//        dialog.getDialogPane().setContent(grid);
+//        dialog.showAndWait();
+        Popup.showConnection(p0,p1,edge);
     }
 
     //----------------------------------------------------------------------------------------
@@ -329,29 +331,32 @@ public class MainController implements Controller {
         Pin p0 = pins[0];
         Pin p1 = pins[1];
 
-        Dialog<Pair<String, Integer>> dialog = new Dialog<>();
-        dialog.setTitle("Connection");
-        dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
+//        Dialog<Pair<String, Integer>> dialog = new Dialog<>();
+//        dialog.setTitle("Connection");
+//        dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
+//
+//        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+//
+//        GridPane grid = new GridPane();
+//        grid.setHgap(10);
+//        grid.setVgap(10);
+//        grid.setPadding(new Insets(20, 150, 10, 10));
+//
+//        TextField nameField = new TextField();
+//        TextField timeField = new TextField();
+//
+//        grid.add(new Label("Name:"), 0, 0);
+//        grid.add(nameField, 1, 0);
+//
+//        grid.add(new Label("Time:"), 0, 1);
+//        grid.add(timeField, 1, 1);
+//
+//        dialog.getDialogPane().setContent(grid);
+//        dialog.setResultConverter(dialogButton -> new Pair<>(nameField.getText(), Integer.parseInt(timeField.getText())));
+//        dialog.showAndWait().ifPresent(result -> addEdgeToMap(p0, p1, result.getKey(), result.getValue()));
 
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-
-        TextField nameField = new TextField();
-        TextField timeField = new TextField();
-
-        grid.add(new Label("Name:"), 0, 0);
-        grid.add(nameField, 1, 0);
-
-        grid.add(new Label("Time:"), 0, 1);
-        grid.add(timeField, 1, 1);
-
-        dialog.getDialogPane().setContent(grid);
-        dialog.setResultConverter(dialogButton -> new Pair<>(nameField.getText(), Integer.parseInt(timeField.getText())));
-        dialog.showAndWait().ifPresent(result -> addEdgeToMap(p0, p1, result.getKey(), result.getValue()));
+        Pair<String, Integer> result = Popup.newConnection(p0, p1);
+        addEdgeToMap(p0, p1, result.getKey(), result.getValue());
     }
 
     //----------------------------------------------------------------------------------------
@@ -364,30 +369,32 @@ public class MainController implements Controller {
 
         Edge<Pin> edge = graph.getEdgeBetween(p0,p1);
 
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Connection");
-        dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
-
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-
-        TextField nameField = new TextField();
-        nameField.setText(edge.getName());
-        nameField.setEditable(false);
-        TextField timeField = new TextField();
-
-        grid.add(new Label("Name:"), 0, 0);
-        grid.add(nameField, 1, 0);
-        grid.add(new Label("Time:"), 0, 1);
-        grid.add(timeField, 1, 1);
-
-        dialog.getDialogPane().setContent(grid);
-        dialog.setResultConverter(dialogButton -> timeField.getText());
-        dialog.showAndWait().ifPresent(result -> graph.setConnectionWeight(p0, p1, Integer.parseInt(result)));
+//        Dialog<String> dialog = new Dialog<>();
+//        dialog.setTitle("Connection");
+//        dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
+//
+//        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+//
+//        GridPane grid = new GridPane();
+//        grid.setHgap(10);
+//        grid.setVgap(10);
+//        grid.setPadding(new Insets(20, 150, 10, 10));
+//
+//        TextField nameField = new TextField();
+//        nameField.setText(edge.getName());
+//        nameField.setEditable(false);
+//        TextField timeField = new TextField();
+//
+//        grid.add(new Label("Name:"), 0, 0);
+//        grid.add(nameField, 1, 0);
+//        grid.add(new Label("Time:"), 0, 1);
+//        grid.add(timeField, 1, 1);
+//
+//        dialog.getDialogPane().setContent(grid);
+//        dialog.setResultConverter(dialogButton -> timeField.getText());
+//        dialog.showAndWait().ifPresent(result -> graph.setConnectionWeight(p0, p1, Integer.parseInt(result)));
+        String result = Popup.changeConnection(p0,p1,edge);
+        graph.setConnectionWeight(p0, p1, Integer.parseInt(result));
     }
 
     //-------------------- OutputArea Functions -----------------------------------------------
@@ -405,12 +412,13 @@ public class MainController implements Controller {
         }
 
         if (btnNewPlace.isDisable()) {
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Name");
-            dialog.setHeaderText("");
-            dialog.setContentText("Name of place:");
-            dialog.showAndWait().ifPresent(name -> addPinToMap(new Pin(mouseEvent.getX(), mouseEvent.getY(), name)));
-
+//            TextInputDialog dialog = new TextInputDialog();
+//            dialog.setTitle("Name");
+//            dialog.setHeaderText("");
+//            dialog.setContentText("Name of place:");
+//            dialog.showAndWait().ifPresent(name -> addPinToMap(new Pin(mouseEvent.getX(), mouseEvent.getY(), name)));
+            String name = Popup.newPlace();
+            addPinToMap(new Pin(mouseEvent.getX(), mouseEvent.getY(), name));
             stageManager.setCursor(Cursor.DEFAULT);
             btnNewPlace.setDisable(false);
             return;
