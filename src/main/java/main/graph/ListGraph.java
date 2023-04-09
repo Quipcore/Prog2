@@ -8,10 +8,13 @@ public class ListGraph<T> implements Graph<T> {
     private HashMap<T,Set<Edge<T>>> edgeMap = new HashMap<>();
     private Set<T> nodes = new HashSet<>();
 
+    //------------------------------------------------------------------------------------------------------------------
 
     public void add(T node) {
         nodes.add(node);
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     @Override
     public void remove(T node) {
@@ -24,6 +27,8 @@ public class ListGraph<T> implements Graph<T> {
             edgeMap.get(nodeTo).removeIf(edge -> edge.getDestination().equals(nodeTo));
         }
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     @Override
     public void connect(T node1, T node2, String edgeName, int weight) throws NoSuchElementException, IllegalArgumentException, IllegalStateException {
@@ -43,6 +48,8 @@ public class ListGraph<T> implements Graph<T> {
         addToEdgeMap(node2, node1, edgeName, weight);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     private void addToEdgeMap(T node1, T node2, String edgeName, int weight){
         if(edgeMap.containsKey(node1)) {
             edgeMap.get(node1).add(new Edge<>(node1, node2, edgeName, weight));
@@ -53,6 +60,7 @@ public class ListGraph<T> implements Graph<T> {
         }
     }
 
+    //------------------------------------------------------------------------------------------------------------------
 
     private boolean edgeExists(T node1, T node2) {
         return getEdgeBetween(node1, node2) != null;
@@ -71,6 +79,8 @@ public class ListGraph<T> implements Graph<T> {
         edgeMap.get(node2).remove(getEdgeBetween(node2, node1));
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     @Override
     public void setConnectionWeight(T node1, T node2, int weight) throws NoSuchElementException, IllegalArgumentException {
         if (weight <= 0) {
@@ -84,6 +94,8 @@ public class ListGraph<T> implements Graph<T> {
         getEdgeBetween(node2, node1).setWeight(weight);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     @Override
     public Set<T> getNodes() {
         return new HashSet<>(nodes);
@@ -94,19 +106,12 @@ public class ListGraph<T> implements Graph<T> {
         if (!nodes.contains(node)) {
             throw new NoSuchElementException();
         }
-
-        //        for (T setNodes : nodes) {
-//            if (edgeExists(node, setNodes)) {
-//                nodeEdges.add(getEdgeBetween(node, setNodes));
-//            }
-//        }
-//        Set<Edge<T>> nodeEdges = nodes.parallelStream()
-//                .filter(setNode -> edgeExists(node, setNode))
-//                .map(setNode -> getEdgeBetween(node, setNode)).collect(Collectors.toSet());
         return nodes.parallelStream()
                 .filter(setNode -> edgeExists(node, setNode))
                 .map(setNode -> getEdgeBetween(node, setNode)).collect(Collectors.toSet());
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     @Override
     public Edge<T> getEdgeBetween(T node1, T node2) throws NoSuchElementException {
@@ -127,6 +132,8 @@ public class ListGraph<T> implements Graph<T> {
         return null;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     @Override
     public boolean pathExists(T node1, T node2) {
         if (!nodes.contains(node1) || !nodes.contains(node2)) {
@@ -135,16 +142,9 @@ public class ListGraph<T> implements Graph<T> {
         return getPath(node1, node2) != null;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
 
-    //Write javadoc to getPath
-
-    /**
-     * Link to wikipedia article on Dijkstra's algorithm: shorturl.at/blrFG
-     *
-     * @param origin
-     * @param destination
-     * @return
-     */
+    //Link to wikipedia article on Dijkstra's algorithm: shorturl.at/blrFG
     @Override
     public List<Edge<T>> getPath(T origin, T destination) {
         Map<T, Float> distance = new HashMap<>();
