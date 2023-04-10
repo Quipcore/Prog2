@@ -24,6 +24,7 @@ public class Edge<T> {
     }
 
     public void setWeight(int weight) {
+        if(weight < 0){throw new IllegalArgumentException();}
         this.weight = weight;
     }
 

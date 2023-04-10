@@ -5,7 +5,7 @@ import javafx.scene.shape.Circle;
 
 public class Pin {
 
-    private static int currentClicked = 0;
+    private static int currentClicked = 0; //This static will cause problems if there are multiple instances of the class running at the same time
 
     private boolean isClicked;
 
