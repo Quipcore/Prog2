@@ -33,6 +33,8 @@ public class MainController implements Controller {
     private ListGraph<Pin> graph = new ListGraph<>();
     private StageManager stageManager;
 
+    private boolean isSaved;
+
     //-------------------- FXML components --------------------------------------------------
 
     @FXML
@@ -79,9 +81,15 @@ public class MainController implements Controller {
 
     @FXML
     protected void onMenuNewMapClick() {
+        if(!isSaved){
+            if(Popup.unsavedChanges()){
+                return;
+            }
+        }
         InputStream mapStream = Objects.requireNonNull(getClass().getResourceAsStream("images/map.PNG"));
         mapImage = new Image(mapStream);
         createNewMap(mapImage);
+        isSaved = false;
     }
 
     //----------------------------------------------------------------------------------------
@@ -107,6 +115,11 @@ public class MainController implements Controller {
 
     @FXML
     protected void onMenuOpenFileClick() throws IOException {
+        if(!isSaved){
+            if(Popup.unsavedChanges()){
+                return;
+            }
+        }
         //Get list of all line in file
         Path mapFilePath = Path.of("src/main/java/main/graph/saved/.graph");
         String[] lines = Files.readAllLines(mapFilePath).toArray(new String[0]);
@@ -196,6 +209,8 @@ public class MainController implements Controller {
             stream.forEach(System.out::println);
         }
 
+        isSaved = true;
+
     }
 
     //----------------------------------------------------------------------------------------
@@ -212,6 +227,12 @@ public class MainController implements Controller {
     @FXML
     protected void onExitButtonClick() {
         // Create popup to ask about unsaved changes
+        if(!isSaved){
+            if(Popup.unsavedChanges()){
+                return;
+            }
+        }
+
         stageManager.close();
     }
 
@@ -293,6 +314,8 @@ public class MainController implements Controller {
 
     @FXML
     protected void onNewConnectionButtonClick() {
+        isSaved = false;
+
         Pin[] pins = getSortedClickedPins();
         Pin p0 = pins[0];
         Pin p1 = pins[1];
@@ -305,6 +328,8 @@ public class MainController implements Controller {
 
     @FXML
     protected void onChangeConnectionButtonClick() {
+        isSaved = false;
+
         Pin[] pins = getSortedClickedPins();
         Pin p0 = pins[0];
         Pin p1 = pins[1];
@@ -322,9 +347,11 @@ public class MainController implements Controller {
             return;
         }
 
+        isSaved = false;
         Pin pin = getPinOnMousePos(mouseEvent);
         if (pin != null) {
             pin.click();
+
             return;
         }
 
@@ -400,8 +427,8 @@ public class MainController implements Controller {
 
     //-------------------- Init Functions ----------------------------------------------------
 
-    public void initialize(StageManager manager) {
-        setStageManager(manager);
+    public void initialize() {
+        isSaved = true;
     }
 
     //----------------------------------------------------------------------------------------

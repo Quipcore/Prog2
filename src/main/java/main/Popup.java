@@ -108,4 +108,25 @@ public class Popup {
         dialog.getDialogPane().setContent(textArea);
         dialog.showAndWait();
     }
+
+    public static boolean unsavedChanges() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Unsaved changes, continue anyway?");
+        alert.setHeaderText("You have unsaved changes");
+
+        ButtonType buttonTypeOk = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonTypeOk, buttonTypeCancel);
+
+        alert.showAndWait();
+
+        if (alert.getResult() == buttonTypeCancel) {
+            return true;
+        } else if (alert.getResult() == buttonTypeOk) {
+            return false;
+        }
+
+        return false;
+    }
 }
