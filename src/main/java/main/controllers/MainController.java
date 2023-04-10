@@ -1,5 +1,6 @@
 package main.controllers;
 
+import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -32,6 +33,8 @@ public class MainController implements Controller {
     //-------------------- Application fields -----------------------------------------------
     private ListGraph<Pin> graph = new ListGraph<>();
     private StageManager stageManager;
+
+    private boolean isSaved;
 
     //-------------------- FXML components --------------------------------------------------
 
@@ -79,9 +82,15 @@ public class MainController implements Controller {
 
     @FXML
     protected void onMenuNewMapClick() {
+        if(!isSaved){
+            if(Popup.unsavedChanges()){
+                return;
+            }
+        }
         InputStream mapStream = Objects.requireNonNull(getClass().getResourceAsStream("images/map.PNG"));
         mapImage = new Image(mapStream);
         createNewMap(mapImage);
+        isSaved = false;
     }
 
     //----------------------------------------------------------------------------------------
@@ -107,6 +116,11 @@ public class MainController implements Controller {
 
     @FXML
     protected void onMenuOpenFileClick() throws IOException {
+        if(!isSaved){
+            if(Popup.unsavedChanges()){
+                return;
+            }
+        }
         //Get list of all line in file
         Path mapFilePath = Path.of("src/main/java/main/graph/saved/.graph");
         String[] lines = Files.readAllLines(mapFilePath).toArray(new String[0]);
@@ -147,6 +161,8 @@ public class MainController implements Controller {
                 System.out.println("Connection already exists");
             }
         }
+
+        isSaved = true;
 
     }
 
@@ -196,6 +212,8 @@ public class MainController implements Controller {
             stream.forEach(System.out::println);
         }
 
+        isSaved = true;
+
     }
 
     //----------------------------------------------------------------------------------------
@@ -212,14 +230,28 @@ public class MainController implements Controller {
     @FXML
     protected void onExitButtonClick() {
         // Create popup to ask about unsaved changes
-        stageManager.close();
+        if(!isSaved){
+            if(Popup.unsavedChanges()){
+                return;
+            }
+        }
+
+        stageManager.close(isSaved);
+    }
+
+    @Override
+    public void close(){
+        onExitButtonClick();
     }
 
     //-------------------- Buttons functions -------------------------------------------------
 
     private Pin[] getSortedClickedPins(){
         Pin[] pins = graph.getNodes().parallelStream().filter(Pin::isClicked).toArray(Pin[]::new);
-
+        if(pins.length != 2){
+            Popup.error("Two places must be selected");
+            return null;
+        }
         //If p0 is newer than p1 then swap
         if (pins[0].getTimestamp() > pins[1].getTimestamp()) {
             Pin temp = pins[0];
@@ -236,13 +268,16 @@ public class MainController implements Controller {
     @FXML
     protected void onFindPathButtonClick() {
         Pin[] pins = getSortedClickedPins();
+        if(pins == null){
+            return;
+        }
         Pin p0 = pins[0];
         Pin p1 = pins[1];
 
         List<Edge<Pin>> path = graph.getPath(p0,p1);
 
         if(path == null){
-            System.out.println("No path found");
+            Popup.findPath(p0,p1,"No path found");
             return;
         }
 
@@ -265,8 +300,6 @@ public class MainController implements Controller {
 
         Popup.findPath(p0,p1,pathString.toString());
 
-
-
     }
 
     //----------------------------------------------------------------------------------------
@@ -274,10 +307,17 @@ public class MainController implements Controller {
     @FXML
     protected void onShowConnectionButtonClick() {
         Pin[] pins = getSortedClickedPins();
+        if(pins == null){
+            return;
+        }
         Pin p0 = pins[0];
         Pin p1 = pins[1];
 
         Edge<Pin> edge = graph.getEdgeBetween(p0,p1);
+        if(edge == null){
+            Popup.error("No connection found!");
+            return;
+        }
         Popup.showConnection(p0,p1,edge);
     }
 
@@ -294,23 +334,45 @@ public class MainController implements Controller {
     @FXML
     protected void onNewConnectionButtonClick() {
         Pin[] pins = getSortedClickedPins();
+        if(pins == null){
+            return;
+        }
         Pin p0 = pins[0];
         Pin p1 = pins[1];
 
+        if(graph.getEdgeBetween(p0,p1) != null){
+            Popup.error("Connection already exists!");
+            return;
+        }
+
         Pair<String, Integer> result = Popup.newConnection(p0, p1);
-        addEdgeToMap(p0, p1, result.getKey(), result.getValue());
+        if(result != null) {
+            if(result.getValue() < 0){return;}
+            addEdgeToMap(p0, p1, result.getKey(), result.getValue());
+            isSaved = false;
+            return;
+        }
+
+        Popup.error("Result error");
     }
 
     //----------------------------------------------------------------------------------------
 
     @FXML
     protected void onChangeConnectionButtonClick() {
+        isSaved = false;
+
         Pin[] pins = getSortedClickedPins();
+        if(pins == null){
+            return;
+        }
         Pin p0 = pins[0];
         Pin p1 = pins[1];
 
         Edge<Pin> edge = graph.getEdgeBetween(p0,p1);
         String result = Popup.changeConnection(p0,p1,edge);
+        if(result == null || result.isEmpty()){return;}
+
         graph.setConnectionWeight(p0, p1, Integer.parseInt(result));
     }
 
@@ -318,9 +380,7 @@ public class MainController implements Controller {
 
     @FXML
     protected void onOutPutAreaMouseClicked(MouseEvent mouseEvent) {
-        if (mouseEvent.getX() > mapImage.getWidth() || mouseEvent.getY() > mapImage.getHeight()) {
-            return;
-        }
+        if (mouseEvent.getX() > mapImage.getWidth() || mouseEvent.getY() > mapImage.getHeight()) {return;}
 
         Pin pin = getPinOnMousePos(mouseEvent);
         if (pin != null) {
@@ -330,9 +390,11 @@ public class MainController implements Controller {
 
         if (btnNewPlace.isDisable()) {
             String name = Popup.newPlace();
-            addPinToMap(new Pin(mouseEvent.getX(), mouseEvent.getY(), name));
+            if(name != null && !name.isEmpty())
+                addPinToMap(new Pin(mouseEvent.getX(), mouseEvent.getY(), name));
             stageManager.setCursor(Cursor.DEFAULT);
             btnNewPlace.setDisable(false);
+            isSaved = false;
             return;
         }
     }
@@ -400,12 +462,13 @@ public class MainController implements Controller {
 
     //-------------------- Init Functions ----------------------------------------------------
 
-    public void initialize(StageManager manager) {
-        setStageManager(manager);
+    public void initialize() {
+        isSaved = true;
     }
 
     //----------------------------------------------------------------------------------------
 
+    @Override
     public void setStageManager(StageManager manager) {
         this.stageManager = manager;
     }
