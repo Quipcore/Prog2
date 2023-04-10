@@ -108,6 +108,9 @@ public class ListGraph<T> implements Graph<T> {
         if (!nodes.contains(node)) {
             throw new NoSuchElementException();
         }
+        if(!edgeMap.containsKey(node)){
+            return new HashSet<>();
+        }
         return Set.copyOf(edgeMap.get(node));
     }
 

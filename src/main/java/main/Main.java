@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 import main.controllers.Controller;
 import main.graph.Edge;
 import main.graph.ListGraph;
@@ -23,7 +25,7 @@ public class Main extends Application implements StageManager{
 
 
     @Override
-    public void close() {
+    public void close(boolean isSaved) {
         stage.close();
     }
 
@@ -56,8 +58,17 @@ public class Main extends Application implements StageManager{
 
         this.stage.setTitle("Paths");
         this.stage.setScene(scene);
+//        this.stage.getScene().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
+//            mainController.close();
+//        });
+        this.stage.addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
+            mainController.close();
+        });
         this.stage.sizeToScene();
         this.stage.show();
+
+
+
     }
 
     public static void main(String[] args) {

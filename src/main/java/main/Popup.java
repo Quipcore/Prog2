@@ -111,8 +111,8 @@ public class Popup {
 
     public static boolean unsavedChanges() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Unsaved changes, continue anyway?");
-        alert.setHeaderText("You have unsaved changes");
+        alert.setTitle("Warning!");
+        alert.setHeaderText("You have unsaved changes, continue anyway?");
 
         ButtonType buttonTypeOk = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
         ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -128,5 +128,13 @@ public class Popup {
         }
 
         return false;
+    }
+
+    public static void error(String s) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Error");
+        alert.setContentText(s);
+        alert.showAndWait();
     }
 }

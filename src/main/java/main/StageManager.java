@@ -11,5 +11,5 @@ public interface StageManager {
 
     void setCursor(Cursor crosshair);
 
-    void close();
+    void close(boolean isSaved);
 }

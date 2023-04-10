@@ -1,5 +1,6 @@
 package main.controllers;
 
+import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -161,6 +162,8 @@ public class MainController implements Controller {
             }
         }
 
+        isSaved = true;
+
     }
 
     //----------------------------------------------------------------------------------------
@@ -233,7 +236,12 @@ public class MainController implements Controller {
             }
         }
 
-        stageManager.close();
+        stageManager.close(isSaved);
+    }
+
+    @Override
+    public void close(){
+        onExitButtonClick();
     }
 
     //-------------------- Buttons functions -------------------------------------------------
@@ -294,9 +302,11 @@ public class MainController implements Controller {
 
     @FXML
     protected void onShowConnectionButtonClick() {
+
         Pin[] pins = getSortedClickedPins();
         Pin p0 = pins[0];
         Pin p1 = pins[1];
+
 
         Edge<Pin> edge = graph.getEdgeBetween(p0,p1);
         Popup.showConnection(p0,p1,edge);
@@ -314,11 +324,20 @@ public class MainController implements Controller {
 
     @FXML
     protected void onNewConnectionButtonClick() {
+        if(Pin.getCurrentClicked() < 2){
+            Popup.error("Two places must be selected!");
+            return;
+        }
         isSaved = false;
 
         Pin[] pins = getSortedClickedPins();
         Pin p0 = pins[0];
         Pin p1 = pins[1];
+
+        if(graph.getEdgeBetween(p0,p1) != null){
+            Popup.error("Connection already exists!");
+            return;
+        }
 
         Pair<String, Integer> result = Popup.newConnection(p0, p1);
         addEdgeToMap(p0, p1, result.getKey(), result.getValue());
@@ -433,6 +452,7 @@ public class MainController implements Controller {
 
     //----------------------------------------------------------------------------------------
 
+    @Override
     public void setStageManager(StageManager manager) {
         this.stageManager = manager;
     }
