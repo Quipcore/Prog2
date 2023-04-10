@@ -58,6 +58,7 @@ out/
 *.pdb
 testing/
 #puzzledata.txt
+#*/com/example/
 
 # External tool builders
 .externalToolBuilders/
