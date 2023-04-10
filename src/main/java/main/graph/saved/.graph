@@ -1,4 +1,6 @@
 file:src/main/resources/main/controllers/images/map.PNG
-Stockholm;533.0;467.0;Bergen;136.0;409.0
-Stockholm;Bergen;Flight;10
+Bergen;136.0;409.0;Stockholm;533.0;467.0;Luleå;656.0;65.0;Trondheim;293.0;204.0
+Bergen;Trondheim;Boat;12
 Bergen;Stockholm;Flight;10
+Stockholm;Bergen;Flight;10
+Trondheim;Bergen;Boat;12

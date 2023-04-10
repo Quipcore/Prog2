@@ -328,7 +328,6 @@ public class MainController implements Controller {
             Popup.error("Two places must be selected!");
             return;
         }
-        isSaved = false;
 
         Pin[] pins = getSortedClickedPins();
         Pin p0 = pins[0];
@@ -340,7 +339,18 @@ public class MainController implements Controller {
         }
 
         Pair<String, Integer> result = Popup.newConnection(p0, p1);
-        addEdgeToMap(p0, p1, result.getKey(), result.getValue());
+        if(result != null) {
+            if(result.getValue() < 0){
+
+                return;
+            }
+            addEdgeToMap(p0, p1, result.getKey(), result.getValue());
+            isSaved = false;
+            return;
+        }
+
+        Popup.error("Result error");
+
     }
 
     //----------------------------------------------------------------------------------------
@@ -366,19 +376,20 @@ public class MainController implements Controller {
             return;
         }
 
-        isSaved = false;
+
         Pin pin = getPinOnMousePos(mouseEvent);
         if (pin != null) {
             pin.click();
-
             return;
         }
 
         if (btnNewPlace.isDisable()) {
             String name = Popup.newPlace();
-            addPinToMap(new Pin(mouseEvent.getX(), mouseEvent.getY(), name));
+            if(name != null && !name.isEmpty())
+                addPinToMap(new Pin(mouseEvent.getX(), mouseEvent.getY(), name));
             stageManager.setCursor(Cursor.DEFAULT);
             btnNewPlace.setDisable(false);
+            isSaved = false;
             return;
         }
     }

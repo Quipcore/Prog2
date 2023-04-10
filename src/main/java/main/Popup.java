@@ -6,9 +6,11 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import main.graph.Edge;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class Popup {
 
-    public static void showConnection(Pin p0, Pin p1, Edge<Pin> edge){
+    public static void showConnection(Pin p0, Pin p1, Edge<Pin> edge) {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Connection");
         dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
@@ -37,8 +39,8 @@ public class Popup {
         dialog.showAndWait();
     }
 
-    public static Pair<String, Integer> newConnection(Pin p0, Pin p1){
-        Dialog<Pair<String, Integer>> dialog = new Dialog<>();
+    public static Pair<String, Integer> newConnection(Pin p0, Pin p1) {
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Connection");
         dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
 
@@ -59,11 +61,37 @@ public class Popup {
         grid.add(timeField, 1, 1);
 
         dialog.getDialogPane().setContent(grid);
-        dialog.setResultConverter(dialogButton -> new Pair<>(nameField.getText(), Integer.parseInt(timeField.getText())));
-        return dialog.showAndWait().orElse(null);
+
+        AtomicBoolean isCanceled = new AtomicBoolean(false);
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton.getButtonData().isDefaultButton()) {
+                return new Pair<>(nameField.getText(), timeField.getText());
+            }
+            if (dialogButton.getButtonData().isCancelButton()) {
+                isCanceled.set(true);
+                return null;
+            }
+
+
+            return null;
+        });
+
+        Pair<String, String> dialogPair = dialog.showAndWait().orElse(null);
+        if (isCanceled.get()) {
+            return new Pair<>("", -1);
+        }
+        if (dialogPair == null
+                || dialogPair.getKey().equals("")
+                || dialogPair.getValue().equals("")
+                || !dialogPair.getValue().matches("[0-9]+")) {
+            return null;
+        }
+
+        return new Pair<>(dialogPair.getKey(), Integer.parseInt(dialogPair.getValue()));
+
     }
 
-    public static String changeConnection(Pin p0, Pin p1, Edge<Pin> edge){
+    public static String changeConnection(Pin p0, Pin p1, Edge<Pin> edge) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Connection");
         dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
@@ -90,7 +118,7 @@ public class Popup {
         return dialog.showAndWait().orElse(null);
     }
 
-    public static String newPlace(){
+    public static String newPlace() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Name");
         dialog.setHeaderText("");
@@ -98,7 +126,7 @@ public class Popup {
         return dialog.showAndWait().orElse(null);
     }
 
-    public static void findPath(Pin p0, Pin p1, String path){
+    public static void findPath(Pin p0, Pin p1, String path) {
         Dialog<String> dialog = new TextInputDialog();
         dialog.setTitle("Message");
         dialog.setHeaderText("The path from " + p0 + " to " + p1);
