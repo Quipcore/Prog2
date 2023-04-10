@@ -75,10 +75,6 @@ public class Pin {
     }
 
     //---------------------------------------------------------------------
-
-    public static int getCurrentClicked() {
-        return currentClicked;
-    }
     /**
      * @return name of the pin
      */
