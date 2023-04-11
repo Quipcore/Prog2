@@ -1,2 +1,4 @@
 file:src/main/resources/main/controllers/images/map.PNG
-Stockholm;526.0;467.0;Luleå;659.0;61.0
+Luleå;659.0;61.0;Stockholm;526.0;467.0
+Luleå;Stockholm;Boat;123
+Stockholm;Luleå;Boat;123

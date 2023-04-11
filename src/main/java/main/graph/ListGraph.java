@@ -1,30 +1,28 @@
 package main.graph;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ListGraph<T> implements Graph<T> {
 
-    private Map<T,Set<Edge<T>>> edgeMap = new HashMap<>();
-    private Set<T> nodes = new HashSet<>();
+    private Map<T,Set<Edge<T>>> nodes = new HashMap<>();
 
     //--------------------------------------------------------------------------------------
 
     public void add(T node) {
-        nodes.add(node);
+        nodes.putIfAbsent(node, new HashSet<>());
     }
 
     //--------------------------------------------------------------------------------------
 
     @Override
     public void remove(T node) throws NoSuchElementException{
-        if (!nodes.remove(node)) {
+        if(!nodes.containsKey(node)){
             throw new NoSuchElementException();
         }
-        edgeMap.remove(node);
+        nodes.remove(node);
 
-        for(T nodeTo : nodes){
-            edgeMap.get(nodeTo).removeIf(edge -> edge.getDestination().equals(nodeTo));
+        for(Set<Edge<T>> edges : nodes.values()) {
+            edges.removeIf(edge -> edge.getDestination().equals(node));
         }
     }
 
@@ -32,7 +30,7 @@ public class ListGraph<T> implements Graph<T> {
 
     @Override
     public void connect(T node1, T node2, String edgeName, int weight) throws NoSuchElementException, IllegalArgumentException, IllegalStateException {
-        if (!nodes.contains(node1) || !nodes.contains(node2)) {
+        if (!nodes.containsKey(node1) || !nodes.containsKey(node2)) {
             throw new NoSuchElementException();
         }
         if (weight < 0) {
@@ -51,12 +49,12 @@ public class ListGraph<T> implements Graph<T> {
     //--------------------------------------------------------------------------------------
 
     private void addToEdgeMap(T node1, T node2, String edgeName, int weight){
-        if(edgeMap.containsKey(node1)) {
-            edgeMap.get(node1).add(new Edge<>(node1, node2, edgeName, weight));
+        if(nodes.containsKey(node1)) {
+            nodes.get(node1).add(new Edge<>(node1, node2, edgeName, weight));
         }
         else {
-            edgeMap.put(node1, new HashSet<>());
-            edgeMap.get(node1).add(new Edge<>(node1, node2, edgeName, weight));
+            nodes.put(node1, new HashSet<>());
+            nodes.get(node1).add(new Edge<>(node1, node2, edgeName, weight));
         }
     }
 
@@ -68,15 +66,15 @@ public class ListGraph<T> implements Graph<T> {
 
     @Override
     public void disconnect(T node1, T node2) throws NoSuchElementException, IllegalStateException {
-        if (!nodes.contains(node1) || !nodes.contains(node2)) {
+        if (!nodes.containsKey(node1) || !nodes.containsKey(node2)) {
             throw new NoSuchElementException();
         }
         if (!edgeExists(node1, node2)) {
             throw new IllegalStateException();
         }
 
-        edgeMap.get(node1).remove(getEdgeBetween(node1, node2));
-        edgeMap.get(node2).remove(getEdgeBetween(node2, node1));
+        nodes.get(node1).remove(getEdgeBetween(node1, node2));
+        nodes.get(node2).remove(getEdgeBetween(node2, node1));
     }
 
     //--------------------------------------------------------------------------------------
@@ -86,7 +84,7 @@ public class ListGraph<T> implements Graph<T> {
         if (weight < 0) {
             throw new IllegalArgumentException();
         }
-        if (!nodes.contains(node1) || !nodes.contains(node2) || !edgeExists(node1, node2)) {
+        if (!nodes.containsKey(node1) || !nodes.containsKey(node2) || !edgeExists(node1, node2)) {
             throw new NoSuchElementException();
         }
 
@@ -98,31 +96,29 @@ public class ListGraph<T> implements Graph<T> {
 
     @Override
     public Set<T> getNodes() {
-        return Set.copyOf(nodes);
+        return Set.copyOf(nodes.keySet());
     }
 
     //--------------------------------------------------------------------------------------
 
     @Override
     public Set<Edge<T>> getEdgeFrom(T node) throws NoSuchElementException {
-        if (!nodes.contains(node)) {
+        if (!nodes.containsKey(node)) {
             throw new NoSuchElementException();
         }
-        if(!edgeMap.containsKey(node)){
-            return new HashSet<>();
-        }
-        return Set.copyOf(edgeMap.get(node));
+
+        return Set.copyOf(nodes.get(node));
     }
 
     //--------------------------------------------------------------------------------------
 
     @Override
     public Edge<T> getEdgeBetween(T node1, T node2) throws NoSuchElementException {
-        if (!nodes.contains(node1) || !nodes.contains(node2)) {
+        if (!nodes.containsKey(node1) || !nodes.containsKey(node2)) {
             throw new NoSuchElementException();
         }
 
-        Set<Edge<T>> edges = edgeMap.get(node1);
+        Set<Edge<T>> edges = nodes.get(node1);
         return edges == null ? null : edges.stream()
                                             .filter(edge -> edge.getDestination().equals(node2))
                                             .findAny()
@@ -134,7 +130,7 @@ public class ListGraph<T> implements Graph<T> {
 
     @Override
     public boolean pathExists(T node1, T node2) {
-        if (!nodes.contains(node1) || !nodes.contains(node2)) {
+        if (!nodes.containsKey(node1) || !nodes.containsKey(node2)) {
             return false;
         }
         return getPath(node1, node2) != null;
@@ -152,7 +148,7 @@ public class ListGraph<T> implements Graph<T> {
 
         PriorityQueue<T> nodeQueue = new PriorityQueue<>(Comparator.comparing(distance::get));
 
-        for (T node : nodes) {
+        for (T node : nodes.keySet()) {
             if (!node.equals(origin)) {
                 distance.put(node, Float.POSITIVE_INFINITY);
                 previous.put(node, null);
@@ -201,7 +197,7 @@ public class ListGraph<T> implements Graph<T> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        for (T node : nodes) {
+        for (T node : nodes.keySet()) {
             for (Edge<T> edge : getEdgeFrom(node)) {
                 sb.append(node).append(" -> ");
                 sb.append(edge.getName()).append(" -> ");
