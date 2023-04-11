@@ -1,5 +1,6 @@
 package main.graph;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -13,7 +14,7 @@ public interface Graph <T> {
     void disconnect(T node1, T node2) throws NoSuchElementException, IllegalStateException;
     void setConnectionWeight(T node1, T node2, int weight) throws NoSuchElementException, IllegalArgumentException;
     Set<T> getNodes();
-    Set<Edge<T>> getEdgeFrom(T node) throws NoSuchElementException;
+    Collection<Edge<T>> getEdgesFrom(T node) throws NoSuchElementException;
     Edge<T> getEdgeBetween(T node1, T node2) throws NoSuchElementException;
     String toString();
     boolean pathExists(T node1, T node2);

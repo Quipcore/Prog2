@@ -211,7 +211,7 @@ public class MainController implements Controller {
                                         .append("\n");
 
         for(Pin node : graph.getNodes()) {
-            for(Edge<Pin> edge : graph.getEdgeFrom(node)) {
+            for(Edge<Pin> edge : graph.getEdgesFrom(node)) {
                 output.append(edge.toString()).append("\n");
             }
         }

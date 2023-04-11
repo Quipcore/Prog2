@@ -102,7 +102,7 @@ public class ListGraph<T> implements Graph<T> {
     //--------------------------------------------------------------------------------------
 
     @Override
-    public Set<Edge<T>> getEdgeFrom(T node) throws NoSuchElementException {
+    public Collection<Edge<T>> getEdgesFrom(T node) throws NoSuchElementException {
         if (!nodes.containsKey(node)) {
             throw new NoSuchElementException();
         }
@@ -159,7 +159,7 @@ public class ListGraph<T> implements Graph<T> {
 
         while (!nodeQueue.isEmpty()) {
             T u = nodeQueue.poll();
-            for (Edge<T> edge : getEdgeFrom(u)) {
+            for (Edge<T> edge : getEdgesFrom(u)) {
                 T v = edge.getDestination();
                 float alt = distance.get(u) + edge.getWeight();
                 if (alt < distance.get(v)) {
@@ -198,7 +198,7 @@ public class ListGraph<T> implements Graph<T> {
         StringBuilder sb = new StringBuilder();
 
         for (T node : nodes.keySet()) {
-            for (Edge<T> edge : getEdgeFrom(node)) {
+            for (Edge<T> edge : getEdgesFrom(node)) {
                 sb.append(node).append(" -> ");
                 sb.append(edge.getName()).append(" -> ");
                 sb.append(edge.getDestination()).append("\n");
