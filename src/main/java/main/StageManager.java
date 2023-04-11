@@ -1,10 +1,8 @@
 package main;
 
 import javafx.scene.Cursor;
-import main.controllers.Controller;
 
-import java.io.File;
-import java.io.IOException;
+import java.awt.*;
 
 public interface StageManager {
     void resizeStage();
@@ -12,4 +10,8 @@ public interface StageManager {
     void setCursor(Cursor crosshair);
 
     void close(boolean isSaved);
+
+    Dimension getDimensions();
+
+    Point getPos();
 }

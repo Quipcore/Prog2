@@ -1,10 +1,12 @@
 package main.controllers;
 
-import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -19,12 +21,19 @@ import main.StageManager;
 import main.graph.Edge;
 import main.graph.ListGraph;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -219,10 +228,24 @@ public class MainController implements Controller {
     //----------------------------------------------------------------------------------------
 
     @FXML
-    protected void onMenuSaveImageClick() throws IOException {
-
+    protected void onMenuSaveImageClick() throws IOException, AWTException {
         // Save screenshot of current windowPane to resource folder with name "capture.PNG"
-        throw new UnsupportedOperationException("Not implemented yet");
+        //throw new UnsupportedOperationException("Not implemented yet");
+
+        Robot robot = new Robot();
+        String format = "png";
+        String fileName = "src/main/resources/main/controllers/images/capture.PNG";
+
+        Dimension screenSize = stageManager.getDimensions();
+        screenSize.setSize(imageView.getImage().getWidth(),screenSize.getHeight());
+
+        Point pos = stageManager.getPos();
+        //pos.move((int) (pos.getX() + 1), (int) pos.getY());
+        pos.x += 10;
+
+        Rectangle screenRect = new Rectangle(pos,screenSize);
+        BufferedImage image = robot.createScreenCapture(screenRect);
+        ImageIO.write(image, format, new File(fileName));
     }
 
     //----------------------------------------------------------------------------------------
