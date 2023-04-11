@@ -5,12 +5,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import main.controllers.Controller;
 import main.graph.Edge;
 import main.graph.ListGraph;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +32,16 @@ public class Main extends Application implements StageManager{
     @Override
     public void setCursor(Cursor cursor) {
         stage.getScene().setCursor(cursor);
+    }
+
+    @Override
+    public Dimension getDimensions() {
+        return new Dimension((int) stage.getScene().getWidth(), (int) stage.getScene().getHeight());
+    }
+
+    @Override
+    public Point getPos() {
+        return new Point((int) stage.getX(), (int) stage.getY());
     }
 
     static class Node{
@@ -67,7 +77,8 @@ public class Main extends Application implements StageManager{
         this.stage.sizeToScene();
         this.stage.show();
 
-
+        System.out.println(this.stage.getX());
+        System.out.println(this.stage.getY());
 
     }
 
