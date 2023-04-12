@@ -198,12 +198,11 @@ public class ListGraph<T> implements Graph<T> {
         StringBuilder sb = new StringBuilder();
 
         for (T node : nodes.keySet()) {
+            sb.append(node.toString()).append(", ");
             for (Edge<T> edge : getEdgesFrom(node)) {
-                sb.append(node).append(" -> ");
-                sb.append(edge.getName()).append(" -> ");
-                sb.append(edge.getDestination()).append("\n");
+                sb.append(edge.toString()).append(", ");
             }
-            sb.append("\n");
+            //sb.append("\n");
         }
         return sb.toString();
     }

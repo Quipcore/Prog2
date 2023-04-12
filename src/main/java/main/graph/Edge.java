@@ -33,6 +33,6 @@ public class Edge<T> {
     }
 
     public String toString() {
-        return String.format("%s;%s;%s;%d", fromNode, toNode, name, weight);
+        return String.format("till %s med %s tar %d", toNode, name, weight);
     }
 }

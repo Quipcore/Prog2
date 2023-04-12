@@ -240,7 +240,6 @@ public class MainController implements Controller {
         screenSize.setSize(imageView.getImage().getWidth(),screenSize.getHeight());
 
         Point pos = stageManager.getPos();
-        //pos.move((int) (pos.getX() + 1), (int) pos.getY());
         pos.x += 10;
 
         Rectangle screenRect = new Rectangle(pos,screenSize);
