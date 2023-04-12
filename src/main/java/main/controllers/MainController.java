@@ -205,14 +205,18 @@ public class MainController implements Controller {
         StringBuilder output = new StringBuilder();
         String imageFilePath = "file:src/main/resources/main/controllers/images/map.PNG";
         output.append(imageFilePath).append("\n");
+
         output.append(graph.getNodes().stream()
-                                        .map(Pin::getLongString)
+                                        .map(Pin::toString)
                                         .collect(Collectors.joining(";")))
                                         .append("\n");
 
         for(Pin node : graph.getNodes()) {
             for(Edge<Pin> edge : graph.getEdgesFrom(node)) {
-                output.append(edge.toString()).append("\n");
+                output.append(node.getName()).append(";")
+                        .append(edge.getDestination()).append(";")
+                        .append(edge.getName()).append(";")
+                        .append(edge.getWeight()).append("\n");
             }
         }
 

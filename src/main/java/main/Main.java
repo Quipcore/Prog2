@@ -79,7 +79,6 @@ public class Main extends Application implements StageManager{
 
         System.out.println(this.stage.getX());
         System.out.println(this.stage.getY());
-
     }
 
     public static void main(String[] args) {

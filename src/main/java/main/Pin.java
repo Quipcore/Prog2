@@ -75,21 +75,15 @@ public class Pin {
     }
 
     //---------------------------------------------------------------------
-    /**
-     * @return name of the pin
-     */
-    @Override
-    public String toString() {
+
+    public String getName() {
         return name;
     }
 
-    /**
-     * Used to for saving to file
-     *
-     * @return String in format: name;centerX;centerY
-     */
-    public String getLongString() {
+    //---------------------------------------------------------------------
+
+    @Override
+    public String toString() {
         return name + ";" + circle.getCenterX() + ";" + circle.getCenterY();
     }
-
 }
