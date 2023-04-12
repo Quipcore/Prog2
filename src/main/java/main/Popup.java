@@ -13,7 +13,7 @@ public class Popup {
     public static void showConnection(Pin p0, Pin p1, Edge<Pin> edge) {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Connection");
-        dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
+        dialog.setHeaderText(String.format("Connection from %s to %s", p0.getName(), p1.getName()));
 
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -42,7 +42,7 @@ public class Popup {
     public static Pair<String, Integer> newConnection(Pin p0, Pin p1) {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Connection");
-        dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
+        dialog.setHeaderText(String.format("Connection from %s to %s", p0.getName(), p1.getName()));
 
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -94,7 +94,7 @@ public class Popup {
     public static String changeConnection(Pin p0, Pin p1, Edge<Pin> edge) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Connection");
-        dialog.setHeaderText(String.format("Connection from %s to %s", p0, p1));
+        dialog.setHeaderText(String.format("Connection from %s to %s", p0.getName(), p1.getName()));
 
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -129,7 +129,7 @@ public class Popup {
     public static void findPath(Pin p0, Pin p1, String path) {
         Dialog<String> dialog = new TextInputDialog();
         dialog.setTitle("Message");
-        dialog.setHeaderText("The path from " + p0 + " to " + p1);
+        dialog.setHeaderText("The path from " + p0.getName() + " to " + p1.getName());
 
         TextArea textArea = new TextArea(path);
         textArea.setEditable(false);

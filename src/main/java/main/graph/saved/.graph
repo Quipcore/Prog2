@@ -1,4 +1,4 @@
 file:src/main/resources/main/controllers/images/map.PNG
-Luleå;653.0;57.0;Stockholm;533.0;464.0
-Luleå;Stockholm;Boat;12
-Stockholm;Luleå;Boat;12
+Stockholm;531.0;466.0;Trondheim;298.0;207.0
+Stockholm;Trondheim;Flight;3
+Trondheim;Stockholm;Flight;3

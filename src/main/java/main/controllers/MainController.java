@@ -179,7 +179,7 @@ public class MainController implements Controller {
 
     private static Pin getPin(List<Pin> pins, String connection) {
         return pins.stream()
-                    .filter(pin -> pin.toString().equals(connection))
+                    .filter(pin -> pin.getName().equals(connection))
                     .findFirst()
                     .orElse(null);
     }
@@ -214,7 +214,7 @@ public class MainController implements Controller {
         for(Pin node : graph.getNodes()) {
             for(Edge<Pin> edge : graph.getEdgesFrom(node)) {
                 output.append(node.getName()).append(";")
-                        .append(edge.getDestination()).append(";")
+                        .append(edge.getDestination().getName()).append(";")
                         .append(edge.getName()).append(";")
                         .append(edge.getWeight()).append("\n");
             }
@@ -311,14 +311,7 @@ public class MainController implements Controller {
         int accumulatedWeight = 0;
         for (Edge<Pin> edge: path) {
             System.out.println(edge);
-            pathString.append("to ")
-                    .append(edge.getDestination())
-                    .append(" by ")
-                    .append(edge.getName())
-                    .append(" takes ")
-                    .append(edge.getWeight())
-                    .append("\n");
-
+            pathString.append(edge.toString()).append("\n");
             accumulatedWeight += edge.getWeight();
         }
         System.out.println("Accumulated weight: " + accumulatedWeight);
