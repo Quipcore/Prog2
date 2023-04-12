@@ -1,6 +1,8 @@
 package main.graph;
 
-public class Edge<T> {
+import java.io.Serializable;
+
+public class Edge<T> implements Serializable {
 
     private int weight;
     private String name;

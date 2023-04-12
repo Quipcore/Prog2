@@ -1,8 +1,9 @@
 package main.graph;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class ListGraph<T> implements Graph<T> {
+public class ListGraph<T> implements Graph<T>, Serializable {
 
     private Map<T,Set<Edge<T>>> nodes = new HashMap<>();
 
@@ -207,3 +208,4 @@ public class ListGraph<T> implements Graph<T> {
         return sb.toString();
     }
 }
+
