@@ -237,19 +237,14 @@ public class MainController implements Controller {
     @FXML
     protected void onMenuSaveImageClick() throws IOException, AWTException {
         // Save snapshot of current outputArea save with name "capture.PNG"
-        String format = "png";
-        String fileName = "src/main/resources/main/controllers/images/capture.PNG";
+        final String fileformat = "png";
+        final String fileName = "src/main/resources/main/controllers/images/capture.PNG";
         WritableImage image = outputArea.snapshot(null,null);
-
-        ImageIO.write(SwingFXUtils.fromFXImage(image,null), format, new File(fileName));
-
-
-
-//        WritableImage image = outputArea.snapshot(new SnapshotParameters(), null);
-//        File file = new File("capture.PNG");
-//        ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
-
-
+        try{
+            ImageIO.write(SwingFXUtils.fromFXImage(image,null), fileformat, new File(fileName));
+        }catch (IOException e){
+            System.out.println("Error while saving image");
+        }
     }
 
     //----------------------------------------------------------------------------------------
