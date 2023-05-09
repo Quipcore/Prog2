@@ -1,3 +1,4 @@
+//From: https://jar-download.com/artifacts/org.openjfx/javafx-swing/11/source-code/javafx/embed/swing/SwingFXUtils.java
 package utils;
 
 /*
@@ -24,6 +25,7 @@ package utils;
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
