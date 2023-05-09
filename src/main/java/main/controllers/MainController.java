@@ -3,27 +3,34 @@ package main.controllers;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
+
 import main.Pin;
 import main.Popup;
 import main.StageManager;
 import main.graph.Edge;
 import main.graph.ListGraph;
+import utils.SwingFXUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.beans.EventHandler;
+import java.awt.image.renderable.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -229,22 +236,20 @@ public class MainController implements Controller {
 
     @FXML
     protected void onMenuSaveImageClick() throws IOException, AWTException {
-        // Save screenshot of current windowPane to resource folder with name "capture.PNG"
-        //throw new UnsupportedOperationException("Not implemented yet");
-
-        Robot robot = new Robot();
+        // Save snapshot of current outputArea save with name "capture.PNG"
         String format = "png";
         String fileName = "src/main/resources/main/controllers/images/capture.PNG";
+        WritableImage image = outputArea.snapshot(null,null);
 
-        Dimension screenSize = stageManager.getDimensions();
-        screenSize.setSize(imageView.getImage().getWidth(),screenSize.getHeight());
+        ImageIO.write(SwingFXUtils.fromFXImage(image,null), format, new File(fileName));
 
-        Point pos = stageManager.getPos();
-        pos.x += 10;
 
-        Rectangle screenRect = new Rectangle(pos,screenSize);
-        BufferedImage image = robot.createScreenCapture(screenRect);
-        ImageIO.write(image, format, new File(fileName));
+
+//        WritableImage image = outputArea.snapshot(new SnapshotParameters(), null);
+//        File file = new File("capture.PNG");
+//        ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+
+
     }
 
     //----------------------------------------------------------------------------------------
