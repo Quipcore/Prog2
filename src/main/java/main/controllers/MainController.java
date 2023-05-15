@@ -98,7 +98,7 @@ public class MainController implements Controller {
                 return;
             }
         }
-        InputStream mapStream = Objects.requireNonNull(getClass().getResourceAsStream("images/map.PNG"));
+        InputStream mapStream = Objects.requireNonNull(getClass().getResourceAsStream("images/europa.gif"));
         mapImage = new Image(mapStream);
         createNewMap(mapImage);
         isSaved = false;
@@ -133,12 +133,13 @@ public class MainController implements Controller {
             }
         }
         //Get list of all line in file
-        Path mapFilePath = Path.of("src/main/java/main/graph/saved/.graph");
+        Path mapFilePath = Path.of("src/main/java/main/graph/saved/europa.graph");
         String[] lines = Files.readAllLines(mapFilePath).toArray(new String[0]);
 
         //Get image and set image
         String[] pathSplit = lines[0].split(":");
-        mapImage = new Image(new FileInputStream(pathSplit[1].trim()));
+        final String imageLocation = "src/main/java/main/images/" + pathSplit[1].trim();
+        mapImage = new Image(new FileInputStream(imageLocation));
         createNewMap(mapImage);
 
         //Get pins and add them to map
@@ -174,7 +175,6 @@ public class MainController implements Controller {
         }
 
         isSaved = true;
-
     }
 
     //----------------------------------------------------------------------------------------
@@ -205,7 +205,7 @@ public class MainController implements Controller {
         }
 
         StringBuilder output = new StringBuilder();
-        String imageFilePath = "file:src/main/resources/main/controllers/images/map.PNG";
+        String imageFilePath = "file:europa.gif";
         output.append(imageFilePath).append("\n");
         output.append(graph.getNodes().stream().map(Pin::toString).collect(Collectors.joining(";"))).append("\n");
 
