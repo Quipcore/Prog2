@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import javafx.util.Pair;
 
 import main.Pin;
@@ -428,7 +429,13 @@ public class MainController implements Controller {
     //----------------------------------------------------------------------------------------
 
     private void addPinToMap(Pin pin) {
-        outputArea.getChildren().add(pin.getCircle());
+        Text name = new Text(pin.getName());
+        final int xOffset = -10;
+        final int YOffset = 20;
+        name.setX(pin.getCircle().getCenterX() + xOffset);
+        name.setY(pin.getCircle().getCenterY() + YOffset);
+
+        outputArea.getChildren().addAll(pin.getCircle(), name);
         graph.add(pin);
     }
 
