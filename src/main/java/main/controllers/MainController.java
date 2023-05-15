@@ -1,11 +1,8 @@
 package main.controllers;
 
-import javafx.beans.binding.DoubleBinding;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -198,7 +195,7 @@ public class MainController implements Controller {
             5. Close file
          */
         String resourcePath = "src/main/java/main/graph/saved/";
-        Path filePath = Path.of(resourcePath + ".graph");
+        Path filePath = Path.of(resourcePath + "europa.graph");
 
         if(!Files.exists(filePath)) {
             Files.createFile(filePath);
@@ -232,11 +229,11 @@ public class MainController implements Controller {
     @FXML
     protected void onMenuSaveImageClick() throws IOException, AWTException {
         // Save snapshot of current outputArea save with name "capture.PNG"
-        final String fileformat = "png";
-        final String fileName = "src/main/resources/main/controllers/images/capture.PNG";
+        final String fileFormat = "png";
+        final String fileName = "src/main/resources/main/controllers/images/capture.png";
         WritableImage image = outputArea.snapshot(null,null);
         try{
-            ImageIO.write(SwingFXUtils.fromFXImage(image,null), fileformat, new File(fileName));
+            ImageIO.write(SwingFXUtils.fromFXImage(image,null), fileFormat, new File(fileName));
         }catch (IOException e){
             System.out.println("Error while saving image");
         }
@@ -406,7 +403,6 @@ public class MainController implements Controller {
             stageManager.setCursor(Cursor.DEFAULT);
             btnNewPlace.setDisable(false);
             isSaved = false;
-            return;
         }
     }
 
@@ -450,31 +446,6 @@ public class MainController implements Controller {
         line.setEndX(p1.getCircle().getCenterX());
         line.setEndY(p1.getCircle().getCenterY());
         outputArea.getChildren().add(line);
-    }
-
-    //-------------------- Developer Functions -----------------------------------------------
-
-    @FXML
-    protected void bindImage() {
-        //Resize image to fit the window
-        DoubleBinding newWidth = outputArea.widthProperty().subtract(0);
-        DoubleBinding newHeight = vBox.heightProperty().subtract(hBox.getHeight() + menu.getHeight());
-        imageView.fitWidthProperty().bind(newWidth);
-        imageView.fitHeightProperty().bind(newHeight);
-    }
-
-    //----------------------------------------------------------------------------------------
-
-    @FXML
-    protected void printImageSize() {
-        System.out.println("Image size: " + imageView.getFitWidth() + ", " + imageView.getFitHeight());
-    }
-
-    //----------------------------------------------------------------------------------------
-
-    @FXML
-    protected void printWindowSize() {
-        System.out.println("Window size: " + vBox.getWidth() + ", " + vBox.getHeight());
     }
 
     //-------------------- Init Functions ----------------------------------------------------
