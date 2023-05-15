@@ -1,4 +1,4 @@
 file:src/main/resources/main/controllers/images/map.PNG
-Stockholm;531.0;466.0;Trondheim;298.0;207.0
-Stockholm;Trondheim;Flight;3
-Trondheim;Stockholm;Flight;3
+A;535.0;466.0;L;659.0;60.0
+A;L;A-L;12
+L;A;A-L;12

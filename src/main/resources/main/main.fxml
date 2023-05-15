@@ -1,66 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.text.Text?>
 
-
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <VBox fx:id="vBox" xmlns:fx="http://javafx.com/fxml" fx:controller="main.controllers.MainController">
-    <MenuBar fx:id="menu" styleClass="@menuBar.css">
-        <Menu text="File" fx:id="menuFile">
-            <MenuItem text="New Map" fx:id="menuNewMap" onAction="#onMenuNewMapClick"/>
-            <MenuItem text="Open" fx:id="menuOpenFile" onAction="#onMenuOpenFileClick"/>
-            <MenuItem text="Save" fx:id="menuSaveFile" onAction="#onMenuSaveFileClick"/>
-            <MenuItem text="Save Image" fx:id="menuSaveImage" onAction="#onMenuSaveImageClick"/>
-            <SeparatorMenuItem/>
-            <MenuItem text="Exit" fx:id="menuExit" onAction="#onExitButtonClick"/>
-        </Menu>
+<!--    <MenuBar fx:id="menu" styleClass="@menuBar.css">-->
+<!--        <Menu text="File" fx:id="menuFile">-->
+<!--&lt;!&ndash;            <MenuItem text="New Map" fx:id="menuNewMap" onAction="#onMenuNewMapClick"/>&ndash;&gt;-->
+<!--            <MenuItem text="Open" fx:id="menuOpenFile" onAction="#onMenuOpenFileClick"/>-->
+<!--            <MenuItem text="Save" fx:id="menuSaveFile" onAction="#onMenuSaveFileClick"/>-->
+<!--            <MenuItem text="Save Image" fx:id="menuSaveImage" onAction="#onMenuSaveImageClick"/>-->
+<!--            <SeparatorMenuItem/>-->
+<!--            <MenuItem text="Exit" fx:id="menuExit" onAction="#onExitButtonClick"/>-->
+<!--        </Menu>-->
 
-        <!--Dev menu suppose to be deleted at release and/or at the end of development-->
-        <Menu text="Dev" styleClass="devMenu">
-            <MenuItem text="Bind image" onAction="#bindImage"/>
-            <MenuItem text="Print image size" onAction="#printImageSize"/>
-            <MenuItem text="Print window size" onAction="#printWindowSize"/>
-        </Menu>
-    </MenuBar>
-    <HBox fx:id="hBox" style="-fx-background-color: lightgrey" alignment="CENTER" spacing="20">
-        <Button text="Find Path"
-                fx:id="btnFindPath"
-                onAction="#onFindPathButtonClick"
-                styleClass="findPath-button"
-                stylesheets="@hBox.css"
-        />
-        <Button text="Show Connection"
-                fx:id="btnShowConnection"
-                onAction="#onShowConnectionButtonClick"
-                styleClass="showConnection-button"
-                stylesheets="@hBox.css"
-        />
-        <Button text="New Place"
-                fx:id="btnNewPlace"
-                onAction="#onNewPlaceButtonClick"
-                styleClass="newPlace-button"
-                stylesheets="@hBox.css"
-        />
-        <Button text="New Connection"
-                fx:id="btnNewConnection"
-                onAction="#onNewConnectionButtonClick"
-                styleClass="newConnection-button"
-                stylesheets="@hBox.css"
-        />
-        <Button text="Change Connection"
-                fx:id="btnChangeConnection"
-                onAction="#onChangeConnectionButtonClick"
-        />
-    </HBox>
-    <Pane fx:id="outputArea" onMouseClicked="#onOutPutAreaMouseClicked">
-        <ImageView fx:id="imageView"/>
-    </Pane>
+<!--        &lt;!&ndash;Dev menu suppose to be deleted at release and/or at the end of development&ndash;&gt;-->
+<!--        <Menu text="Dev" styleClass="devMenu">-->
+<!--            <MenuItem text="Bind image" onAction="#bindImage"/>-->
+<!--            <MenuItem text="Print image size" onAction="#printImageSize"/>-->
+<!--            <MenuItem text="Print window size" onAction="#printWindowSize"/>-->
+<!--        </Menu>-->
+<!--    </MenuBar>-->
+<!--    <HBox fx:id="hBox" style="-fx-background-color: lightgrey" alignment="CENTER" spacing="20">-->
+<!--        <Button text="Find Path"-->
+<!--                fx:id="btnFindPath"-->
+<!--                onAction="#onFindPathButtonClick"-->
+<!--                styleClass="findPath-button"-->
+<!--                stylesheets="@hBox.css"-->
+<!--        />-->
+<!--        <Button text="Show Connection"-->
+<!--                fx:id="btnShowConnection"-->
+<!--                onAction="#onShowConnectionButtonClick"-->
+<!--                styleClass="showConnection-button"-->
+<!--                stylesheets="@hBox.css"-->
+<!--        />-->
+<!--        <Button text="New Place"-->
+<!--                fx:id="btnNewPlace"-->
+<!--                onAction="#onNewPlaceButtonClick"-->
+<!--                styleClass="newPlace-button"-->
+<!--                stylesheets="@hBox.css"-->
+<!--        />-->
+<!--        <Button text="New Connection"-->
+<!--                fx:id="btnNewConnection"-->
+<!--                onAction="#onNewConnectionButtonClick"-->
+<!--                styleClass="newConnection-button"-->
+<!--                stylesheets="@hBox.css"-->
+<!--        />-->
+<!--        <Button text="Change Connection"-->
+<!--                fx:id="btnChangeConnection"-->
+<!--                onAction="#onChangeConnectionButtonClick"-->
+<!--        />-->
+<!--    </HBox>-->
+<!--    <Pane fx:id="outputArea" onMouseClicked="#onOutPutAreaMouseClicked">-->
+<!--        <ImageView fx:id="imageView"/>-->
+<!--    </Pane>-->
 </VBox>
 

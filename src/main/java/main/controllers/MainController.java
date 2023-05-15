@@ -1,7 +1,9 @@
 package main.controllers;
 
 import javafx.beans.binding.DoubleBinding;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
@@ -12,9 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
 
@@ -27,10 +28,6 @@ import utils.SwingFXUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
-import java.beans.EventHandler;
-import java.awt.image.renderable.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -53,9 +50,6 @@ public class MainController implements Controller {
     private boolean isSaved;
 
     //-------------------- FXML components --------------------------------------------------
-
-    @FXML
-    private Pane windowPane;
 
     @FXML
     private VBox vBox;
@@ -405,8 +399,9 @@ public class MainController implements Controller {
 
         if (btnNewPlace.isDisable()) {
             String name = Popup.newPlace();
-            if(name != null && !name.isEmpty())
+            if(name != null && !name.isEmpty()){
                 addPinToMap(new Pin(mouseEvent.getX(), mouseEvent.getY(), name));
+            }
             stageManager.setCursor(Cursor.DEFAULT);
             btnNewPlace.setDisable(false);
             isSaved = false;
@@ -479,6 +474,86 @@ public class MainController implements Controller {
 
     public void initialize() {
         isSaved = true;
+
+        this.menu = new MenuBar();
+        this.menuFile = new Menu("File");
+
+        this.menuNewMap = new MenuItem("New Map");
+        this.menuNewMap.setOnAction(event -> onMenuNewMapClick());
+
+        this.menuOpenFile = new MenuItem("Open");
+        this.menuOpenFile.setOnAction(event -> {
+            try {
+                onMenuOpenFileClick();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        this.menuSaveFile = new MenuItem("Save");
+        this.menuSaveFile.setOnAction(event -> {
+            try {
+                onMenuSaveFileClick();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        this.menuSaveImage = new MenuItem("Save Image");
+        this.menuSaveImage.setOnAction(event -> {
+            try {
+                onMenuSaveImageClick();
+            } catch (IOException | AWTException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        this.menuExit = new MenuItem("Exit");
+        this.menuExit.setOnAction(event -> onExitButtonClick());
+
+        this.menuFile.getItems().add(menuNewMap);
+        this.menuFile.getItems().add(menuOpenFile);
+        this.menuFile.getItems().add(menuSaveFile);
+        this.menuFile.getItems().add(menuSaveImage);
+        this.menuFile.getItems().add(menuExit);
+        this.menu.getMenus().add(menuFile);
+
+        this.btnChangeConnection = new Button("Change Connection");
+        this.btnChangeConnection.setOnAction(event -> onChangeConnectionButtonClick());
+
+        this.btnNewConnection = new Button("New Connection");
+        this.btnNewConnection.setOnAction(event -> onNewConnectionButtonClick());
+
+        this.btnShowConnection = new Button("Show Connection");
+        this.btnShowConnection.setOnAction(event -> onShowConnectionButtonClick());
+
+        this.btnFindPath = new Button("Find Path");
+        this.btnFindPath.setOnAction(event -> onFindPathButtonClick());
+
+        this.btnNewPlace = new Button("New Place");
+        this.btnNewPlace.setOnAction(event -> onNewPlaceButtonClick());
+
+        this.hBox = new HBox();
+        this.hBox.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null,null)));
+        this.hBox.setAlignment(Pos.CENTER);
+        this.hBox.setSpacing(20);
+
+        this.hBox.getChildren().add(btnFindPath);
+        this.hBox.getChildren().add(btnShowConnection);
+        this.hBox.getChildren().add(btnNewPlace);
+        this.hBox.getChildren().add(btnNewConnection);
+        this.hBox.getChildren().add(btnChangeConnection);
+
+
+        this.imageView = new ImageView();
+        this.outputArea = new Pane();
+        this.outputArea.setOnMouseClicked(this::onOutPutAreaMouseClicked);
+        outputArea.getChildren().add(imageView);
+
+        this.vBox.getChildren().add(menu);
+        this.vBox.getChildren().add(hBox);
+        this.vBox.getChildren().add(outputArea);
+
     }
 
     //----------------------------------------------------------------------------------------

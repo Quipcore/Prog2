@@ -10,8 +10,4 @@ public interface StageManager {
     void setCursor(Cursor crosshair);
 
     void close(boolean isSaved);
-
-    Dimension getDimensions();
-
-    Point getPos();
 }
